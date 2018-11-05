@@ -73,6 +73,7 @@ class StarNode:
 
 			self.peersLock.acquire()
 			if packet["TYPE"] == packetType.TERMINATE:
+				self.peers[self.hostname]["RTT"] = sys.maxsize
 				self.peerscv.notify()
 				self.peersLock.release()
 				break
@@ -347,21 +348,6 @@ class StarNode:
 	def heartbeat(self):
 		if not self.isCountingDown:
 
-			#periodic handshake with peers
-			for peer in self.peers:
-				if peer != self.hostname:
-					self.sendTo(packetType.RTTSUM, self.peers[self.hostname]["RTTSUM"], peer)
-
-			#timer will create a new thread to call heartbeat function for a given time interval
-			self.updateRTTtimer = threading.Timer(self.hbInterval-1, self.updateRTT)
-			self.updateRTTtimer.start()
-			self.heartbeatTimer = threading.Timer(self.hbInterval, self.heartbeat)
-			self.heartbeatTimer.start()
-
-	'''updateRTT of this node, reselect hub'''
-	def updateRTT(self):
-
-		if not self.isCountingDown:
 			#recalculate RTT
 			self.activeCount = 0
 			self.activepeers = []
@@ -377,19 +363,36 @@ class StarNode:
 			
 			self.peerscv.notify()
 			self.peersLock.release()
+
+			#periodic handshake with peers
+			for peer in self.peers:
+				if peer != self.hostname:
+					self.sendTo(packetType.RTTSUM, self.peers[self.hostname]["RTTSUM"], peer)
+
+			#timer will create a new thread to call heartbeat function for a given time interval
+			self.selectHubnCheckTimer = threading.Timer(self.hbInterval-1, self.selectHubnCheck)
+			self.selectHubnCheckTimer.start()
+			self.heartbeatTimer = threading.Timer(self.hbInterval, self.heartbeat)
+			self.heartbeatTimer.start()
+
+
+	'''Reselect hub'''
+	def selectHubnCheck(self):
+
+		if not self.isCountingDown:
 			
 			## Reselect the hub of the network
 			for key in self.peers:
 				if self.peers[key]["RTTSUM"] < self.peers[self.hub]["RTTSUM"]:
 					self.hub = key
 
-			self.statusChecker()
+			self.statusPrinter()
 
 			if self.activeCount == 0:
 				self.countingDown(self.probingMaxAttempts)
 
 	'''Print network Status'''
-	def statusChecker(self):
+	def statusPrinter(self):
 
 		self.logger.info("Heartbeat from %s with RTTSUM: %f\
 			\n				# of active peer(s) in the network: %d \
@@ -409,7 +412,7 @@ class StarNode:
 		#print(self.waitAckPackets)
 		try:
 			self.heartbeatTimer.cancel()
-			self.updateRTTtimer.cancel()
+			self.selectHubnCheckTimer.cancel()
 		except:
 			None
 
