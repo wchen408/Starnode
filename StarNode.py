@@ -121,7 +121,7 @@ class StarNode:
 						#Introduce the network to the node knocked on the door
 						nodesnports = {}
 						for each in self.peers:
-							if self.peers[each]["RTT"] = sys.maxsize
+							if self.peers[each]["RTT"] != sys.maxsize
 								self.sendTo(packetType.KNOCKRPLY, {packet["srcHost"]:packet["srcPort"]}, each)
 								nodesnports[each] = self.peers[each]["port"]
 						self.sendTo(packetType.KNOCKRPLY, nodesnports, packet["srcHost"])
