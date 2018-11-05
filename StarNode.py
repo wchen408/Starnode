@@ -120,6 +120,7 @@ class StarNode:
 						#Introduce the network to the node knocked on the door
 						nodesnports = {}
 						for each in self.peers:
+							self.sendTo(packetType.KNOCKRPLY, {packet["srcHost"]:packet["srcPort"]}, each)
 							nodesnports[each] = self.peers[each]["port"]
 						self.sendTo(packetType.KNOCKRPLY, nodesnports, packet["srcHost"])
 					elif packet["TYPE"] == packetType.KNOCKRPLY:
