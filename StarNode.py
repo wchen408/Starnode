@@ -88,9 +88,12 @@ class StarNode:
 				if (packet["TYPE"] == packetType.ACK):
 					self.logger.debug("Received %s %d with payload=[%s] from %s", packetType(packet["TYPE"]), packet["hash"], packet["payload"], packet["srcHost"])
 					self.waitAckLock.acquire()
-					# cancel the timer object
-					self.waitAckPackets[packet["payload"]]["timer"].cancel()
-					# update RTT of the peer
+					try:
+						# cancel the timer object
+						self.waitAckPackets[packet["payload"]]["timer"].cancel()
+						# update RTT of the peer
+					except:
+						self.logger.debug("Attmpted to cancel packet %d failed", packet["hash"])
 					oldRTT = self.peers[packet["srcHost"]]["RTT"]
 					timeNow = time.time()
 					self.peers[packet["srcHost"]]["RTT"] = timeNow - self.waitAckPackets[packet["payload"]]["LST"]
@@ -113,9 +116,9 @@ class StarNode:
 						self.sendTo(packetType.KNOCKKNOCK, None, packet["srcHost"])
 					
 					if packet["TYPE"] == packetType.DATA:
-						self.logger.info("Received %s %d with payload=[%s] from %s", packetType(packet["TYPE"]), packet["hash"], packet["payload"], packet["srcHost"])
+						self.logger.info("Received [%s] from %s.",packet["payload"], packet["srcHost"])
 					elif packet["TYPE"] == packetType.BDATA:
-						self.logger.info("Received %s %d with payload=[%s] from %s", packetType(packet["TYPE"]), packet["hash"], packet["payload"], packet["srcHost"])
+						self.broadcast(packet["payload"])
 					elif packet["TYPE"] == packetType.KNOCKKNOCK:
 						self.logger.debug("Received %s %d with payload=[%s] from %s", packetType(packet["TYPE"]), packet["hash"], packet["payload"], packet["srcHost"])
 						#Introduce the network to the node knocked on the door
@@ -129,7 +132,7 @@ class StarNode:
 						self.logger.debug("Received %s %d with payload=[%s] from %s", packetType(packet["TYPE"]), packet["hash"], packet["payload"], packet["srcHost"])
 						for newNeighbour in packet["payload"].keys():
 							if newNeighbour not in self.peers:
-								self.logger.info("Node %s joined the network", newNeighbour)
+								self.logger.info("Node %s joined the network.", newNeighbour)
 								self.peers[newNeighbour] = {"port": packet["payload"][newNeighbour], "RTT": sys.maxsize-1, "RTTSUM": sys.maxsize}
 					elif packet["TYPE"] == packetType.RTTSUM:
 						self.logger.debug("Received %s %d with payload=[%s] from %s", packetType(packet["TYPE"]), packet["hash"], packet["payload"], packet["srcHost"])
@@ -157,6 +160,44 @@ class StarNode:
 		self.waitMsgQ.put((packet, recipient))
 		self.waitMsgcv.notify()
 		self.waitMsgLock.release()
+
+	'''ThreadHandler to interact with user'''
+	def console_interaction(self):
+
+		if not self.isCountingDown:
+
+			user_input = input("Starnode Command: ")
+			commands = user_input.split()
+			if len(commands) > 0: 
+				if "disconnect" in commands[0].lower():
+					self.logger.critical("Node Exiting...")
+					return self.__exit__()
+				else:
+					if "send" in commands[0].lower():
+						self.sendTo(packetType.BDATA, " ".join(commands[1:]), self.hub)
+					elif "show-status" in commands[0].lower():
+						status = "Node %s with RTTSUM: %f\
+							\n		# of active peer(s) in the network: %d \
+							\n		peers: %s \
+							\n 		Hub: {%s} with RTTSUM: %f " % \
+							(self.hostname, self.peers[self.hostname]["RTTSUM"], \
+							 self.activeCount, self.activepeers, \
+							  self.hub, self.peers[self.hub]["RTTSUM"])
+						print(status)
+
+					elif "show-log" in commands[0].lower():
+						f = open('logging.log', 'r')
+						for line in f:
+							print(line)
+						f.close()
+					else:
+						self.logger.info("Invalid argument")			
+			
+			return self.console_interaction()
+
+
+
+
 
 	'''Threadworker that sends out packet. For every type except for ACK, push the packet into the waitAckPackets '''
 	def sender(self):
@@ -231,9 +272,8 @@ class StarNode:
 
 	'''Broadcast messge to all known active node in the network'''
 	def broadcast(self, message):
-		if self.hub == self.hostname:
-			for peer in self.peers:
-				self.sendTo(packetType.DATA, message, peer)
+		for peer in self.peers:
+			self.sendTo(packetType.DATA, message, peer)
 
 
 	'''socket setup returns the socket handler'''		
@@ -286,9 +326,22 @@ class StarNode:
 		'''
 		Instantiate a logger 
 		'''
-		logging.basicConfig(format='%(asctime)s %(levelname)-3s %(message)s', \
-			datefmt='%Y-%m-%d %H:%M:%S', level=logging.INFO)
+		# print('Text 1\nText 2\nText 3')
+		CURSOR_UP_ONE = '\x1b[1A'
+		ERASE_LINE = '\x1b[2K'
 		self.logger = logging.getLogger(__name__)
+
+		logging.basicConfig(format='%(asctime)s %(levelname)-2s %(message)s', \
+			datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG
+			, filename='logging.log', filemode='w')
+
+		console_handler = logging.StreamHandler()
+
+		console_handler.setFormatter(logging.Formatter('\x1b[1K\x1b[99D%(asctime)s %(levelname)-2s %(message)s', \
+			datefmt='%Y-%m-%d %H:%M:%S'))
+		console_handler.setLevel(logging.INFO)
+		self.logger.addHandler(console_handler)
+		
 
 		'''heartbeat interval'''
 		self.hbInterval = 5
@@ -310,6 +363,7 @@ class StarNode:
 
 		self.isCountingDown = True
 		if remainingAttempts == 0:
+			self.logger.critical("Could not established connection with other nodes. Exiting...")
 			return self.__exit__()
 
 		if self.portPOC != None:
@@ -330,6 +384,7 @@ class StarNode:
 
 		if anyActivePeer:
 			self.isCountingDown = False
+			threading.Thread(target=self.console_interaction).start()
 			threading.Thread(target=self.nextHeartbeat).start()
 		else:
 			return self.countingDown(remainingAttempts-1)
@@ -345,7 +400,7 @@ class StarNode:
 		self.heartbeatTimer.start()
 
 
-	'''Heartbeat periodically to log current network status'''
+	'''Recalculate RTTSUM and heartbeat to the peers in the network'''
 	def heartbeat(self):
 		if not self.isCountingDown:
 
@@ -359,6 +414,7 @@ class StarNode:
 					self.activeCount = self.activeCount + 1
 					self.activepeers.append(key)
 					self.peers[self.hostname]["RTTSUM"] += self.peers[key]["RTT"]
+
 			# if no active peer, revert self.hostname's RTTSUM to infinity
 			self.peers[self.hostname]["RTTSUM"] = sys.maxsize if self.activeCount == 0 else self.peers[self.hostname]["RTTSUM"]
 			
@@ -371,8 +427,11 @@ class StarNode:
 					self.sendTo(packetType.RTTSUM, self.peers[self.hostname]["RTTSUM"], peer)
 
 			#timer will create a new thread to call heartbeat function for a given time interval
+			#sleep to account for delay, lost packet durig RTT exchange before hub re-selection
 			self.selectHubnCheckTimer = threading.Timer(self.hbInterval-1, self.selectHubnCheck)
 			self.selectHubnCheckTimer.start()
+
+			#sleep because of periodic heartbeat
 			self.heartbeatTimer = threading.Timer(self.hbInterval, self.heartbeat)
 			self.heartbeatTimer.start()
 
@@ -380,22 +439,13 @@ class StarNode:
 	'''Reselect hub'''
 	def selectHubnCheck(self):
 
-		if not self.isCountingDown:
-			
+		if not self.isCountingDown:			
 			## Reselect the hub of the network
 			for key in self.peers:
 				if self.peers[key]["RTTSUM"] < self.peers[self.hub]["RTTSUM"]:
 					self.hub = key
 
-			self.statusPrinter()
-
-			if self.activeCount == 0:
-				self.countingDown(self.probingMaxAttempts)
-
-	'''Print network Status'''
-	def statusPrinter(self):
-
-		self.logger.info("Heartbeat from %s with RTTSUM: %f\
+			self.logger.debug("Heartbeat from %s with RTTSUM: %f\
 			\n				# of active peer(s) in the network: %d \
 			\n				peers: %s \
 			\n 				Hub: {%s} with RTTSUM: %f ", \
@@ -403,6 +453,8 @@ class StarNode:
 			 self.activeCount, self.activepeers, \
 			  self.hub, self.peers[self.hub]["RTTSUM"])
 
+			if self.activeCount == 0:
+				self.countingDown(self.probingMaxAttempts)
 
 
 	def __exit__(self):
@@ -419,5 +471,4 @@ class StarNode:
 
 		for packet in self.waitAckPackets:
 			self.waitAckPackets[packet]["timer"].cancel()
-
-		self.logger.critical("Could not established connection with other nodes. Exiting...")
+		
