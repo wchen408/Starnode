@@ -1,0 +1,49 @@
+11-06 02:29:31 :node 2: -DEBUG    socket created successfully at port 1222
+11-06 02:29:31 :node 2: -DEBUG    Listener worker started.
+11-06 02:29:31 :node 2: -DEBUG    Sender worker started.
+11-06 02:29:31 :node 2: -WARNING  Attempt to contact POC with 5 more tries
+11-06 02:29:31 :node 2: -DEBUG    Send: packetType.KNOCKKNOCK 110311-06 02:29:31 :node 1: -DEBUG    Send: pa11-06 02:29:31 :node 2: -DEBUG    Received p11-06 02:29:31 :node 1: -DEBUG    Received packetType.KNOCKKNOCK 110366998229373820311-06 02:29:31 :node 2: -INFO     Node localhost joined the network
+11-06 02:29:31 :node 2: -DEBUG    Received packetType.KNOCKKNOCK 1109624937269773019 with payload=[None] from localhost
+11-06 02:29:31 :node 2: -DEBUG    Send: packetType.ACK 1125488691035325147 to localhost
+11-06 02:29:31 :node 2: -DEBUG    Received packetType.KNOCKRPLY 11202665605511-06 02:29:31 :node 1: -DEBUG    Send: packetType.KNOCK11-06 02:29:31 :node 2: -DEBUG    Send: packetType.KNOCKRPLY 1132927436953043675 to userbox at attempt 1
+11-06 02:29:31 :node 2: -DEBUG    Send: packetType.KNOCKRPLY 11336751048599311-06 02:29:31 :node 1: -DEBUG 11-06 02:29:31 :node 2: -DEBUG    Send: packetType.KNOCKRPLY 1133687199487836891 to localhost at attempt 1
+11-06 02:29:31 :node 2: -DEBUG    Send: packetType.ACK 1133771312127361755 to localhost
+11-06 02:29:31 :node 2: -DEBUG    Received packetType.KNOCKRPLY 1120279204942922459 with payload=[{'localhost': 1111, 'userbox': 1222}] from localhost
+11-06 02:29:31 :node 2: -DEBUG    Send: packetType.ACK 1137217181568811739 to localhost
+11-06 02:29:31 :node 2: -DEBUG    Received packetType.KNOCKRPLY 1132927436953043675 with payload=[{'localhost': 1111}] from userbox
+11-06 02:29:31 :node 2: -DEBUG    Received packetType.ACK 1144963240986493659 with payload=[1133675104859931355] from localhost
+11-06 02:29:31 :node 2: -DEBUG    Received packetType.ACK 1147150719369954011 with payload=[1133687199487836891] from localhost
+11-06 02:29:31 :node 2: -DEBUG    Received packetType.ACK 1149830229206844123 with payload=[1132927436953043675] from userbox
+11-06 02:29:31 :node 2: -DEBUG    Send: packetType.ACK 114983022920611-06 02:29:35 :no11-06 02:29:35 :node 2: -DEBUG    Received packetType.RTTSUM 1136368908347982559 wit11-06 02:29:35 :node 1: -DEBUG    Received packetType.ACK 1138191348871021279 with payload=[1136368908347982559] from userbox
+11-06 02:29:35 :node 1: -DEBUG    Received packetType.RTTSUM 1183491227935392479 with payload=[0.0151488780975341811-06 02:29:35 11-06 02:29:35 :node 1: -DEBUG    Send: packetType.ACK 1184923891586384607 to userbox
+11-06 02:29:39 :node 1: -IN11-06 02:29:39 :node 2: -INFO     Heartbeat from userbox with RTTSUM: 0.015149			
+				# of active peer(s) in the network: 1 			
+				peers: ['localhost'] 			
+ 				Hub: {localho11-06 02:29:40 :node 1: -DEBUG    Received packetType.ACK 1144668022114435812 with payload=[1141883508917093092] from userbox
+11-06 02:29:40 :node 1: -DEBUG    Send: packetType.RTTSUM 1141883508917093092 to userbox at attempt 1
+11-06 02:29:40 :node 1: -DEBUG    Received packetType.RTTSUM 1187342267411677924 with payload=[0.0010466575622558594] from 11-06 02:29:40 :node 2: -DEBUG    Received packetType.ACK 1189931617295090404 with payload=[1111-06 02:29:44 :node 1: -INFO     11-06 02:29:44 :node 2: -INFO     Heartbeat from userbox with RTTSUM: 0.001047			
+				# of active peer(s) in the network: 1 			
+				peers: ['localhost'] 			
+ 				Hub:11-06 02:29:45 :node 1: -DEBUG    11-06 02:29:45 :node 2: -DEBUG    Received packetType.RTTSUM 115761411-06 02:29:45 :node 1: -DEBUG    Received packetType.ACK 11589911-06 02:29:45 :node 2: -DEBUG    Send: packetType.ACK 115899411-06 02:29:45 :node 1: -DEBUG    Received packetType.RTTSUM 1195841492294386409 with payload=[0.002670764923095703] from userbox
+11-06 02:29:45 :node 2: -DEBUG    Received packetType.ACK 1197298345201189609 with pay11-06 02:29:49 :node 1: -INFO     Heartbea11-06 02:29:49 :node 2: -INFO     Heartbeat from userbox with RTTSUM: 0.002671			
+				# of active peer(s) in the network: 1 			
+				peers: ['localhost'] 			
+ 11-06 02:29:50 :node 1: -DEBUG    Send: pa11-06 02:29:50 :node 2: -DEBUG    Received packetType.RTTSUM11-06 02:29:50 :node 1: -DEBUG    Received packetType.ACK 1162813262507623150 with payload=[1161237112589206254] from userbox
+11-06 02:29:50 :node 1: -DEBUG    Received packetType.RTTSUM 1199302205142811374 with payload=[0.0014414787292480469] from userbox
+11-06 0211-06 02:29:50 :node 2: -DEBUG    Received packetType.ACK 1200976211596100334 11-06 02:29:54 :node 1: -INFO     Heartbeat from l11-06 02:29:54 :node 2: -INFO     Heartbeat from userbox with RTTSUM: 0.001441			
+				# of active peer(s) in the network: 1 			
+				peers: ['localhost11-06 02:29:55 :node 1: -DEBUG    Send: packetType11-06 02:29:55 :node 2: -DEBUG    Received packetTyp11-06 02:29:55 :node 1: -DEBUG    Received packetType.ACK 1168839685739463411 with payload=[1167128845646643955] from userbox
+11-06 02:29:55 :node 1: -DEBUG    Received packetType.RTTSUM 1203774468688790259 with payload=[0.0015702247619628906] from userbox
+11-06 02:29:55 11-06 02:29:55 :node 2: -DEBUG    Received packetType.ACK 120582230909511-06 02:29:59 :node 1: -INFO     Heartbeat from localhos11-06 02:29:59 :node 2: -INFO     Heartbeat from userbox with RTTSUM: 0.001570			
+				# of active peer(s) in the network: 1 			
+				peers: ['lo11-06 02:30:00 :node 1: -DEBUG    Received packetType.ACK 1177560462215168760 with payload=[1173391663878456056] from userbox
+11-06 02:30:00 :node 1: -DEBUG    Send: packetType.RTTSUM 1173391663878456056 to userbox at attempt 1
+11-06 02:30:00 :node 1: -DEBUG    Received packetType.RTTSUM 1208663996897510136 with payload=[0.0025424957275390625] from userbox
+11-06 02:30:00 :node 1: -DEBUG    Send: packetType.ACK 1212087876106404600 to userbox
+11-06 02:30:04 :node 1: -INFO     Heartbeat from localhost with 11-06 02:30:04 :node 2: -INFO     Heartbeat from userbox with RTTSUM: 0.002542			
+				# of active peer(s) in the network: 1 			
+				peer11-06 02:30:05 :node 1: -DEBUG    Received packetType.ACK 1196628742619874045 with payload=[1194170234620166909] from userbox
+11-06 02:30:05 :node 1: -DEBUG    Send: packetType.RTTSUM 1194170234620166909 to userbox at attempt 1
+11-06 02:30:05 :node 1: -DEBUG    Received packetType.RTTSUM 1214944407315366653 with payload=[0.0026199817657470703] from userbox
+11-06 02:30:05 :node 1: -DEBUG    Send: packetType.ACK 1216313849047761661 to userbox
+ 1216313849047761661 with payload=[1214944407315366653] from localhost

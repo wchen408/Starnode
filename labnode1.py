@@ -1,3 +1,3 @@
 from StarNode import *
 
-node = StarNode("networklab1", 8888, "networklab2", 8888, 10);
+node = StarNode("node1", networklab1", 8888, "networklab2", 8888, 10);

@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 import sys
-
 if sys.version_info[0] != 3 or sys.version_info[1] < 0:
     print("This script requires Python version 3.0")
     sys.exit(1)
@@ -12,6 +11,8 @@ import json
 import queue
 import logging
 import time
+import fcntl
+import struct
 from enum import IntEnum
 
 class packetType(IntEnum):
@@ -26,12 +27,15 @@ class packetType(IntEnum):
 
 class StarNode:
 
-	def __init__(self, hostname, port, hostPOC, portPOC, maxNode):
+	def __init__(self, name, hostname, port, hostPOC, portPOC, maxNode):
 
+		#set up logging
+		self.set_up_logging(name)
 		#instantiate critical data structures, mutex locks, condition variables, logger
 		self.dsSetup()
 
 		#populate instance variables
+		self.name = name
 		self.hostname = hostname
 		self.port = port
 		self.hub = self.hostname
@@ -52,6 +56,9 @@ class StarNode:
 		self.listenerThread.start()
 		self.senderThread = threading.Thread(target=self.sender, name="senderThread")
 		self.senderThread.start()
+		self.consoleThread = threading.Thread(target=self.console_interaction_thread, args=())
+		self.consoleThread.start()
+		
 
 		threading.Thread(target=self.countingDown, args=(self.probingMaxAttempts,)).start()
 		#self.countingDown(self.probingMaxAttempts)
@@ -88,14 +95,18 @@ class StarNode:
 				if (packet["TYPE"] == packetType.ACK):
 					self.logger.debug("Received %s %d with payload=[%s] from %s", packetType(packet["TYPE"]), packet["hash"], packet["payload"], packet["srcHost"])
 					self.waitAckLock.acquire()
+
 					# cancel the timer object
 					self.waitAckPackets[packet["payload"]]["timer"].cancel()
+
 					# update RTT of the peer
 					oldRTT = self.peers[packet["srcHost"]]["RTT"]
 					timeNow = time.time()
 					self.peers[packet["srcHost"]]["RTT"] = timeNow - self.waitAckPackets[packet["payload"]]["LST"]
+
 					# pop off entry from the self.waitAckPackets
 					del self.waitAckPackets[packet["payload"]]
+
 					# notify the network if the node if previously dead
 					if oldRTT == sys.maxsize:
 						self.logger.info("Node %s joined the network", packet["srcHost"])
@@ -301,7 +312,6 @@ class StarNode:
 		# function is triggered
 		self.isCountingDown = False
 
-
 	'''
 	When no peer nodes is active in the network, this node will start probing POC
 	If connection could not be established with POC after self.maxAttempts, program terminates
@@ -421,3 +431,37 @@ class StarNode:
 			self.waitAckPackets[packet]["timer"].cancel()
 
 		self.logger.critical("Could not established connection with other nodes. Exiting...")
+
+	def set_up_logging(self, name):
+		log = logging.getLogger('test')
+		logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s :' + name + ': -%(levelname)-8s %(message)s',
+                    datefmt='%m-%d %H:%M:%S',
+                    filename='logging.log',
+                    filemode='w')
+		console_handler = logging.StreamHandler()
+		console_handler.setFormatter(logging.Formatter("%(message)s"))
+		console_handler.setLevel(logging.WARNING)
+		log.addHandler(console_handler)
+		#log.info("This logs directly to the roots logger")	
+		#log.warning("This should log to both")
+
+	def console_interaction_thread(self):
+		while True:
+			user_input = input("Starnode Command: ")
+			commands = user_input.split(" ")
+			if ("send" in commands[0].lower()):
+				print("TODO: SEND image, SEND message")
+			elif ("show-status" in commands[0].lower()):
+				print("TODO: show-status")
+			elif ("disconnect" in commands[0].lower()):
+				self.__exit__()
+			elif ("show-log" in commands[0].lower()):
+				f = open('logging.log', 'r')
+				for line in f:
+					print(line)
+				f.close()
+			else:
+				print("Sorry, please try again.")
+
+

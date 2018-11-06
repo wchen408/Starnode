@@ -1,3 +1,3 @@
 from StarNode import * 
 
-node = StarNode("localhost", 1111, None, None, 10);
+node = StarNode("node 1", "localhost", 1111, None, None, 10);
