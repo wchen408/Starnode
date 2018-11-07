@@ -1,0 +1,35 @@
+2018-11-06 21:47:46 DEBUG socket created successfully at port 1444
+2018-11-06 21:47:46 DEBUG Listener worker started.
+2018-11-06 21:47:46 DEBUG Sender worker started.
+2018-11-06 21:47:46 WARNING Attempt to contact POC with 5 more tries
+2018-11-06 21:47:46 DEBUG Send: packetType.KNOCKKNOCK 1515136920221536850 to POC at attempt 1
+2018-11-06 21:47:47 DEBUG Send: packetType.KNOCKKNOCK 1515136920221536850 to POC at attempt 2
+2018-11-06 21:47:48 DEBUG Send: packetType.KNOCKKNOCK 1515136920221536850 to POC at attempt 3
+2018-11-06 21:47:49 WARNING Attempt to contact POC with 4 more tries
+2018-11-06 21:47:49 DEBUG Send: packetType.KNOCKKNOCK 1538746733404770901 to POC at attempt 1
+2018-11-06 21:47:50 DEBUG Send: packetType.KNOCKKNOCK 1538746733404770901 to POC at attempt 2
+2018-11-06 21:47:51 DEBUG Send: packetType.KNOCKKNOCK 1538746733404770901 to POC at attempt 3
+2018-11-06 21:47:52 WARNING Attempt to contact POC with 3 more tries
+2018-11-06 21:47:52 DEBUG Send: packetType.KNOCKKNOCK 1566702916052603480 to POC at attempt 1
+2018-11-06 21:47:53 DEBUG Send: packetType.KNOCKKNOCK 1566702916052603480 to POC at attempt 2
+2018-11-06 21:47:54 DEBUG Send: packetType.KNOCKKNOCK 1566702916052603480 to POC at attempt 3
+2018-11-06 21:47:55 WARNING Attempt to contact POC with 2 more tries
+2018-11-06 21:47:55 DEBUG Send: packetType.KNOCKKNOCK 1584877293503926875 to POC at attempt 1
+2018-11-06 21:47:56 DEBUG Send: packetType.KNOCKKNOCK 1584877293503926875 to POC at attempt 2
+2018-11-06 21:47:57 DEBUG Send: packetType.KNOCKKNOCK 1584877293503926875 to POC at attempt 3
+2018-11-06 21:47:57 DEBUG Received packetType.KNOCKKNOCK 1601108284153156189 with payload=[None] from node1
+2018-11-06 21:47:57 DEBUG Send: packetType.ACK 1603879603210965597 to node1
+2018-11-06 21:47:57 DEBUG Received packetType.ACK 1601278708455461469 with payload=[1584877293503926875] from node1
+2018-11-06 21:47:57 DEBUG Send: packetType.KNOCKRPLY 1604875760745730653 to node3 at attempt 1
+2018-11-06 21:47:57 DEBUG Send: packetType.KNOCKRPLY 1605597590129365597 to node1 at attempt 1
+2018-11-06 21:47:57 INFO Node node1 joined the network
+2018-11-06 21:47:57 DEBUG Received packetType.KNOCKRPLY 1604875760745730653 with payload=[{'192.168.1.641111': {'port': 1111, 'host': '192.168.1.64', 'name': 'node1'}}] from node3
+2018-11-06 21:47:57 DEBUG Send: packetType.ACK 1609395303291703901 to node3
+2018-11-06 21:47:57 DEBUG Received packetType.KNOCKRPLY 1601822966711210589 with payload=[{'192.168.1.641444': {'port': 1444, 'host': '192.168.1.64', 'name': 'node3'}}] from node1
+2018-11-06 21:47:57 DEBUG Send: packetType.ACK 1611007187338023517 to node1
+2018-11-06 21:47:57 DEBUG Received packetType.KNOCKRPLY 1601880691071668829 with payload=[{'192.168.1.641111': {'port': 1111, 'host': '192.168.1.64', 'name': 'node1'}, '192.168.1.641444': {'port': 1444, 'host': '192.168.1.64', 'name': 'node3'}}] from node1
+2018-11-06 21:47:57 DEBUG Received packetType.ACK 1609395303291703901 with payload=[1604875760745730653] from node3
+2018-11-06 21:47:57 DEBUG Send: packetType.ACK 1613024791174992477 to node1
+2018-11-06 21:47:57 DEBUG Received packetType.ACK 1610792782570607197 with payload=[1605597590129365597] from node1
+2018-11-06 21:47:57 DEBUG Received packetType.KNOCKRPLY 1764378064296497757 with payload=[{'192.168.1.641222': {'port': 1222, 'host': '192.168.1.64', 'name': 'node2'}}] from node1
+2018-11-06 21:47:57 DEBUG Send: packetType.ACK 1767841525923992157 to node1

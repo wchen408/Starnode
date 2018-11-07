@@ -1,75 +1,10 @@
-2018-11-06 10:49:31 DEBUG socket created successfully at port 1111
-2018-11-06 10:49:31 DEBUG Listener worker started.
-2018-11-06 10:49:31 DEBUG Sender worker started.
-2018-11-06 10:49:31 WARNING Exiting in 20 seconds if no peers emerge
-2018-11-06 10:49:31 INFO Node TonysMBP.local joined the network
-2018-11-06 10:49:31 DEBUG Send: packetType.ACK 1101722747200976907 to TonysMBP.local
-2018-11-06 10:49:31 DEBUG Received packetType.KNOCKKNOCK 1098688095108315147 with payload=[None] from TonysMBP.local
-2018-11-06 10:49:31 DEBUG Send: packetType.KNOCKKNOCK 1103207637654288395 to TonysMBP.local at attempt 1
-2018-11-06 10:49:31 DEBUG Received packetType.ACK 1118287989385050123 with payload=[1103207637654288395] from TonysMBP.local
-2018-11-06 10:49:31 DEBUG Send: packetType.KNOCKRPLY 1113521606478641163 to TonysMBP.local at attempt 1
-2018-11-06 10:49:31 DEBUG Send: packetType.KNOCKRPLY 1118781120350107659 to localhost at attempt 1
-2018-11-06 10:49:31 DEBUG Send: packetType.KNOCKRPLY 1118815754966382603 to TonysMBP.local at attempt 1
-2018-11-06 10:49:31 DEBUG Received packetType.KNOCKRPLY 1118781120350107659 with payload=[{'TonysMBP.local': 1222}] from localhost
-2018-11-06 10:49:31 DEBUG Send: packetType.ACK 1134827393045870603 to localhost
-2018-11-06 10:49:31 DEBUG Rec2018-11-06 10:49:31 DEBUG Send: packetType.KNOCKRPLY 1124117050279704587 to localhost at attempt 1
-2018-11-06 10:49:31 DEBUG Received packetType.KNOCKRPLY 1113521606478641163 with payload=[{'TonysMBP.local': 1222}] from lo2018-11-06 10:49:31 DEBUG Send: packetType.ACK 1135740537452738571 to TonysMBP.local
-2018-11-06 10:49:31 DEBUG Received packetType.KNOCKRPLY 1124117050279704587 with payload=[{'TonysMBP.local': 1222, 'localhost': 1111}]2018-11-06 10:49:31 DEBUG Send: packetType.ACK 1140377727742883851 to TonysMBP.local
-2018-11-06 10:49:31 DEBUG Received packetType.KNOCKRPLY 1118815754966382603 with payload=[{'TonysMBP.local': 1222, 'localhost': 1111}] from localh2018-11-06 10:49:31 DEBUG Received packetType.ACK 1141203460975343627 with payload=[1118815754966382603] from TonysMBP.local
-2018-11-06 10:49:34 INFO Received [message] from TonysMBP.local.
-2018-11-06 10:49:34 DEBUG Send: packetType.ACK 2064142317423540238 to TonysMBP.local
-2018-11-06 10:49:35 DEBUG Send: packetType.RTTSUM 1129915874604595215 to TonysMBP.local at attempt 1
-2018-11-06 10:49:35 DEBUG Received packetType.RTTSUM 1127457916360701967 with payload=[0.0034019947052001953] from TonysMBP.local
-2018-11-06 10:49:35 DEBUG Send: packetType.ACK 1132738320953096207 to TonysMBP.local
-2018-11-06 10:49:35 DEBUG Received packetType.ACK 1136704259394484239 with payload=[1129915874604595215] from TonysMBP.local
-2018-11-06 10:49:39 DEBUG Heartbeat from localhost with RTTSUM: 0.009072			
-				# of active peer(s) in the network: 1 			
-				peers: ['TonysMBP.local'] 			
- 				Hub: {TonysMBP.local} with RTTSUM: 0.003402 
-2018-11-06 10:49:40 DEBUG Received packetType.RTTSUM 1130531601116149780 with payload=[0.004973888397216797] from TonysMBP.local
-2018-11-06 10:49:40 DEBUG Send: packetType.RTTSUM 1135095124127234068 to TonysMBP.local at attempt 1
-2018-11-06 10:49:40 DEBUG Send: packetType.ACK 1135782318894594068 to TonysMBP.local
-2018-11-06 10:49:40 DEBUG Received packetType.ACK 1141127044917213204 with payload=[1135095124127234068] from TonysMBP.local
-2018-11-06 10:49:44 DEBUG Heartbeat from localhost with RTTSUM: 0.003301			
-				# of active peer(s) in the network: 1 			
-				peers: ['TonysMBP.local'] 			
- 				Hub: {localhost} with RTTSUM: 0.003301 
-2018-11-06 10:49:45 DEBUG Send: packetType.RTTSUM 1144991828288845849 to TonysMBP.local at attempt 1
-2018-11-06 10:49:45 DEBUG Received packetType.RTTSUM 1145088585312090137 with payload=[0.0053479671478271484] from TonysMBP.local
-2018-11-06 10:49:45 DEBUG Send: packetType.ACK 1156262921985177625 to TonysMBP.local
-2018-11-06 10:49:45 DEBUG Received packetType.ACK 1156165615206119449 with payload=[1144991828288845849] from TonysMBP.local
-2018-11-06 10:49:47 DEBUG Send: packetType.BDATA 170639258370029595 to localhost at attempt 1
-2018-11-06 10:49:47 DEBUG Send: packetType.ACK 175924061008934939 to localhost
-2018-11-06 10:49:47 DEBUG Received packetType.ACK 175924061008934939 with payload=[170639258370029595] from localhost
-2018-11-06 10:49:47 DEBUG Send: packetType.DATA 176147811625187355 to TonysMBP.local at attempt 1
-2018-11-06 10:49:47 DEBUG Send: packetType.DATA 176175849171695643 to localhost at attempt 1
-2018-11-06 10:49:47 DEBUG Received packetType.ACK 182530476624427035 with payload=[176147811625187355] from TonysMBP.local
-2018-11-06 10:49:47 INFO Received [this is a long ass msaasge] from localhost.
-2018-11-06 10:49:47 DEBUG Send: packetType.ACK 192985182937135131 to localhost
-2018-11-06 10:49:47 DEBUG Received packetType.ACK 192985182937135131 with payload=[176175849171695643] from localhost
-2018-11-06 10:49:49 DEBUG Heartbeat from localhost with RTTSUM: 0.002743			
-				# of active peer(s) in the network: 1 			
-				peers: ['TonysMBP.local'] 			
- 				Hub: {localhost} with RTTSUM: 0.002743 
-2018-11-06 10:49:50 DEBUG Send: packetType.RTTSUM 1160989722472986654 to TonysMBP.local at attempt 1
-2018-11-06 10:49:50 DEBUG Received packetType.RTTSUM 1160980376624150558 with payload=[0.0039370059967041016] from TonysMBP.local
-2018-11-06 10:49:50 DEBUG Send: packetType.ACK 1166620321518827550 to TonysMBP.local
-2018-11-06 10:49:50 DEBUG Received packetType.ACK 1166332249472350238 with payload=[1160989722472986654] from TonysMBP.local
-2018-11-06 10:49:54 DEBUG Heartbeat from localhost with RTTSUM: 0.004773			
-				# of active peer(s) in the network: 1 			
-				peers: ['TonysMBP.local'] 			
- 				Hub: {TonysMBP.local} with RTTSUM: 0.003937 
-2018-11-06 10:49:55 DEBUG Send: packetType.RTTSUM 1168961181774362659 to TonysMBP.local at attempt 1
-2018-11-06 10:49:55 DEBUG Received packetType.RTTSUM 1168967778844129315 with payload=[0.003103017807006836] from TonysMBP.local
-2018-11-06 10:49:55 DEBUG Send: packetType.ACK 1177142098040829987 to TonysMBP.local
-2018-11-06 10:49:55 DEBUG Received packetType.ACK 1177633029982631971 with payload=[1168961181774362659] from TonysMBP.local
-2018-11-06 10:49:59 DEBUG Heartbeat from localhost with RTTSUM: 0.003127			
-				# of active peer(s) in the network: 1 			
-				peers: ['TonysMBP.local'] 			
- 				Hub: {TonysMBP.local} with RTTSUM: 0.003103 
-2018-11-06 10:50:00 DEBUG Send: packetType.RTTSUM 1171593962367072296 to TonysMBP.local at attempt 1
-2018-11-06 10:50:01 DEBUG Send: packetType.RTTSUM 1171593962367072296 to TonysMBP.local at attempt 2
-2018-11-06 10:50:02 CRITICAL Node Exiting...
-2018-11-06 10:50:02 DEBUG Send: packetType.TERMINATE 258634823208384554 to localhost
-2018-11-06 10:50:02 DEBUG Listener exiting
-2018-11-06 10:50:02 DEBUG Sender exiting
+2018-11-06 12:11:17 DEBUG socket created successfully at port 1222
+2018-11-06 12:11:17 DEBUG Listener worker started.
+2018-11-06 12:11:17 DEBUG Sender worker started.
+2018-11-06 12:11:17 WARNING Attempt to contact POC with 5 more tries
+2018-11-06 12:11:17 DEBUG Send: packetType.KNOCKKNOCK 130632978037590837 to localhost at attempt 1
+2018-11-06 12:11:18 DEBUG Send: packetT2018-11-06 12:11:19 WARNING Exiting in 8 seconds if no peers emerge
+06 12:11:19 DEBUG Send: packetType.KNOCKKNOCK 130632978037590837 to localhost at attempt 3
+2018-11-06 12:11:20 WARNING Attempt to contact POC with 4 more tries
+2018-11-06 12:11:20 DEBUG Send: packetType.KNOCKKNOCK 186736658356489016 to localhost at attempt 1
+2018-11-06 12:11:21 DEBUG Send: packetType.KNOCKKNOCK 186736658356489016 to localhost at attempt 2

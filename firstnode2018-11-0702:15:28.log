@@ -1,0 +1,13 @@
+2018-11-06 21:15:28 DEBUG socket created successfully at port 1111
+2018-11-06 21:15:28 DEBUG Listener worker started.
+2018-11-06 21:15:28 DEBUG Sender worker started.
+2018-11-06 21:15:28 WARNING Exiting in 20 seconds if no peers emerge
+2018-11-06 21:15:32 WARNING Exiting in 16 seconds if no peers emerge
+2018-11-06 21:15:36 WARNING Exiting in 12 seconds if no peers emerge
+2018-11-06 21:15:40 WARNING Exiting in 8 seconds if no peers emerge
+2018-11-06 21:15:44 WARNING Exiting in 4 seconds if no peers emerge
+2018-11-06 21:15:48 CRITICAL Could not established connection with other nodes. Exiting...
+2018-11-06 21:15:48 DEBUG recipient = firstnode
+2018-11-06 21:15:48 DEBUG Send: packetType.TERMINATE 448988873278769876 to firstnode
+2018-11-06 21:15:48 DEBUG Listener exiting
+2018-11-06 21:15:48 DEBUG Sender exiting

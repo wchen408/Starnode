@@ -1,0 +1,17 @@
+2018-11-06 16:17:56 DEBUG socket created successfully at port 1222
+2018-11-06 16:17:56 DEBUG Listener worker started.
+2018-11-06 16:17:56 DEBUG Sender worker started.
+2018-11-06 16:17:56 WARNING Attempt to contact POC with 5 more tries
+2018-11-06 16:17:56 DEBUG Send: packetType.KNOCKKNOCK 810545130131031300 to POC at attempt 1
+2018-11-06 16:17:57 DEBUG Send: packetType.KNOCKKNOCK 810545130131031300 to POC at attempt 2
+2018-11-06 16:17:58 DEBUG Send: packetType.KNOCKKNOCK 810545130131031300 to POC at attempt 3
+2018-11-06 16:17:59 WARNING Attempt to contact POC with 4 more tries
+2018-11-06 16:17:59 DEBUG Send: packetType.KNOCKKNOCK 840869660825093383 to POC at attempt 1
+2018-11-06 16:18:00 DEBUG Send: packetType.KNOCKKNOCK 840869660825093383 to POC at attempt 2
+2018-11-06 16:18:01 DEBUG Send: packetType.KNOCKKNOCK 840869660825093383 to POC at attempt 3
+2018-11-06 16:18:02 WARNING Attempt to contact POC with 3 more tries
+2018-11-06 16:18:02 DEBUG Send: packetType.KNOCKKNOCK 864709821694346506 to POC at attempt 1
+2018-11-06 16:18:03 DEBUG Send: packetType.KNOCKKNOCK 864709821694346506 to POC at attempt 2
+2018-11-06 16:18:03 DEBUG Received packetType.ACK 875595536565142795 with payload=[864709821694346506] from Alex
+2018-11-06 16:18:03 INFO Node Alex joined the network
+2018-11-06 16:18:03 DEBUG Received packetType.KNOCKKNOCK 877442716099806475 with payload=[None] from Alex

@@ -1,0 +1,60 @@
+2018-11-06 21:48:24 DEBUG socket created successfully at port 1111
+2018-11-06 21:48:24 DEBUG Listener worker started.
+2018-11-06 21:48:24 DEBUG Sender worker started.
+2018-11-06 21:48:24 WARNING Exiting in 20 seconds if no peers emerge
+2018-11-06 21:48:24 INFO Node node2 joined the network
+2018-11-06 21:48:24 DEBUG Received packetType.KNOCKKNOCK 2268241362352755320 with payload=[None] from node2
+2018-11-06 21:48:24 DEBUG Send: packetType.KNOCKKNOCK 2271036320910561912 to node2 at attempt 1
+2018-11-06 21:48:24 DEBUG Send: packetType.ACK 2271213892038447736 to node2
+2018-11-06 21:48:24 DEBUG Received packetType.ACK 2273247438794019448 with payload=[2271036320910561912] from node2
+2018-11-06 21:48:24 DEBUG Send: packetType.KNOCKRPLY 2272477230898762360 to node1 at attempt 1
+2018-11-06 21:48:24 DEBUG Send: packetType.KNOCKRPLY 2274280429968315000 to node2 at attempt 1
+2018-11-06 21:48:24 DEBUG Send: packetType.KNOCKRPLY 2274333756282262136 to node2 at attempt 1
+2018-11-06 21:48:24 DEBUG Received packetType.KNOCKRPLY 2272477230898762360 with payload=[{'192.168.1.641222': {'port': 1222, 'host': '192.168.1.64', 'name': 'node2'}}] from node1
+2018-11-06 21:48:24 DEBUG Send: packetType.ACK 2281060018665181816 to node1
+2018-11-06 21:48:24 DEBUG Received packetType.KNOCKRPLY 2274870867712430712 with payload=[{'192.168.1.641222': {'port': 1222, 'host': '192.168.1.64', 'name': 'node2'}}] from node2
+2018-11-06 21:48:24 DEBUG Send: packetType.ACK 2282046830351110776 to node2
+2018-11-06 21:48:24 DEBUG Received packetType.ACK 2281060018665181816 with payload=[2272477230898762360] from node1
+2018-11-06 21:48:24 DEBUG Received packetType.ACK 2280686184711737976 with payload=[2274280429968315000] from node2
+2018-11-06 21:48:24 DEBUG Received packetType.ACK 2282734025118470776 with payload=[2274333756282262136] from node2
+2018-11-06 21:48:25 DEBUG Send: packetType.RTTSUM 2284230460443873913 to node2 at attempt 1
+2018-11-06 21:48:25 DEBUG Received packetType.RTTSUM 2284251351164801657 with payload=[0.007441043853759766] from node2
+2018-11-06 21:48:25 DEBUG Send: packetType.ACK 2287942961455059577 to node2
+2018-11-06 21:48:25 DEBUG Received packetType.ACK 2287933615606223481 with payload=[2284230460443873913] from node2
+2018-11-06 21:48:29 INFO Node node3 joined the network
+2018-11-06 21:48:29 DEBUG Received packetType.KNOCKKNOCK 1806890681384456829 with payload=[None] from node3
+2018-11-06 21:48:29 DEBUG Send: packetType.KNOCKKNOCK 1808398661581951613 to node3 at attempt 1
+2018-11-06 21:48:29 DEBUG Send: packetType.ACK 1808525655174959741 to node3
+2018-11-06 21:48:29 DEBUG Received packetType.ACK 1809690037988774525 with payload=[1808398661581951613] from node3
+2018-11-06 21:48:29 DEBUG Send: packetType.KNOCKRPLY 1809245285535339133 to node3 at attempt 1
+2018-11-06 21:48:29 DEBUG Send: packetType.KNOCKRPLY 1810137539221279357 to node1 at attempt 1
+2018-11-06 21:48:29 DEBUG Send: packetType.KNOCKRPLY 1810167226035229309 to node2 at attempt 1
+2018-11-06 21:48:29 DEBUG Send: packetType.KNOCKRPLY 1810197462604993149 to node3 at attempt 1
+2018-11-06 21:48:29 DEBUG Received packetType.KNOCKRPLY 1810137539221279357 with payload=[{'192.168.1.641444': {'port': 1444, 'host': '192.168.1.64', 'name': 'node3'}}] from node1
+2018-11-06 21:48:29 DEBUG Send: packetType.ACK 1814066644023136893 to node1
+2018-11-06 21:48:29 DEBUG Received packetType.KNOCKRPLY 1810628471163081341 with payload=[{'192.168.1.641444': {'port': 1444, 'host': '192.168.1.64', 'name': 'node3'}}] from node3
+2018-11-06 21:48:29 DEBUG Send: packetType.ACK 1814945153813729917 to node3
+2018-11-06 21:48:29 DEBUG Received packetType.ACK 1812664766697722493 with payload=[1810167226035229309] from node2
+2018-11-06 21:48:29 DEBUG Received packetType.ACK 1814151856174289533 with payload=[1809245285535339133] from node3
+2018-11-06 21:48:29 DEBUG Received packetType.ACK 1814066644023136893 with payload=[1810137539221279357] from node1
+2018-11-06 21:48:29 DEBUG Received packetType.ACK 1816515256418194045 with payload=[1810197462604993149] from node3
+2018-11-06 21:48:29 INFO Heartbeat from node1 with RTTSUM: 0.006286			
+				# of active peer(s) in the network: 2 			
+				peers: ['node1', 'node2'] 			
+ 				Hub: {node2}
+2018-11-06 21:48:30 DEBUG Received packetType.KNOCKRPLY 1810628471163081341 with payload=[{'192.168.1.641444': {'port': 1444, 'host': '192.168.1.64', 'name': 'node3'}}] from node3
+2018-11-06 21:48:30 DEBUG Send: packetType.ACK 1817064462476268158 to node3
+2018-11-06 21:48:30 DEBUG Send: packetType.RTTSUM 2287820365908562558 to node3 at attempt 1
+2018-11-06 21:48:30 DEBUG Send: packetType.RTTSUM 2287945160478315134 to node2 at attempt 1
+2018-11-06 21:48:31 DEBUG Received packetType.KNOCKRPLY 1810628471163081341 with payload=[{'192.168.1.641444': {'port': 1444, 'host': '192.168.1.64', 'name': 'node3'}}] from node3
+2018-11-06 21:48:31 DEBUG Send: packetType.ACK 1824975448638116479 to node3
+2018-11-06 21:48:31 DEBUG Send: packetType.RTTSUM 2287820365908562558 to node3 at attempt 2
+2018-11-06 21:48:31 DEBUG Send: packetType.RTTSUM 2287945160478315134 to node2 at attempt 2
+2018-11-06 21:48:33 DEBUG Send: packetType.RTTSUM 2287820365908562558 to node3 at attempt 3
+2018-11-06 21:48:33 DEBUG Send: packetType.RTTSUM 2287945160478315134 to node2 at attempt 3
+2018-11-06 21:48:34 INFO Node node3 exited the network
+2018-11-06 21:48:34 INFO Node node2 exited the network
+2018-11-06 21:48:34 INFO Heartbeat from node1 with RTTSUM: 0.008462			
+				# of active peer(s) in the network: 3 			
+				peers: ['node3', 'node1', 'node2'] 			
+ 				Hub: {node1}

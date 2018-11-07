@@ -1,0 +1,21 @@
+2018-11-06 21:48:29 DEBUG socket created successfully at port 1444
+2018-11-06 21:48:29 DEBUG Listener worker started.
+2018-11-06 21:48:29 DEBUG Sender worker started.
+2018-11-06 21:48:29 WARNING Attempt to contact POC with 5 more tries
+2018-11-06 21:48:29 DEBUG Send: packetType.KNOCKKNOCK 1806890681384456829 to POC at attempt 1
+2018-11-06 21:48:29 DEBUG Received packetType.KNOCKKNOCK 1808398661581951613 with payload=[None] from node1
+2018-11-06 21:48:29 DEBUG Send: packetType.ACK 1809690037988774525 to node1
+2018-11-06 21:48:29 DEBUG Received packetType.ACK 1808525655174959741 with payload=[1806890681384456829] from node1
+2018-11-06 21:48:29 DEBUG Send: packetType.KNOCKRPLY 1810188116756157053 to node3 at attempt 1
+2018-11-06 21:48:29 DEBUG Send: packetType.KNOCKRPLY 1810628471163081341 to node1 at attempt 1
+2018-11-06 21:48:29 INFO Node node1 joined the network
+2018-11-06 21:48:29 DEBUG Received packetType.KNOCKRPLY 1809245285535339133 with payload=[{'192.168.1.641444': {'name': 'node3', 'port': 1444, 'host': '192.168.1.64'}}] from node1
+2018-11-06 21:48:29 DEBUG Send: packetType.ACK 1814151856174289533 to node1
+2018-11-06 21:48:29 DEBUG Received packetType.KNOCKRPLY 1810188116756157053 with payload=[{'192.168.1.641111': {'name': 'node1', 'port': 1111, 'host': '192.168.1.64'}}] from node3
+2018-11-06 21:48:29 DEBUG Send: packetType.ACK 1815583970069467773 to node3
+2018-11-06 21:48:29 DEBUG Received packetType.KNOCKRPLY 1810197462604993149 with payload=[{'192.168.1.641111': {'name': 'node1', 'port': 1111, 'host': '192.168.1.64'}, '192.168.1.641444': {'name': 'node3', 'port': 1444, 'host': '192.168.1.64'}, '192.168.1.641222': {'name': 'node2', 'port': 1222, 'host': '192.168.1.64'}}] from node1
+2018-11-06 21:48:29 DEBUG Send: packetType.ACK 1816515256418194045 to node1
+2018-11-06 21:48:30 DEBUG Send: packetType.KNOCKRPLY 1810188116756157053 to node3 at attempt 2
+2018-11-06 21:48:30 DEBUG Send: packetType.KNOCKRPLY 1810628471163081341 to node1 at attempt 2
+2018-11-06 21:48:31 DEBUG Send: packetType.KNOCKRPLY 1810188116756157053 to node3 at attempt 3
+2018-11-06 21:48:31 DEBUG Send: packetType.KNOCKRPLY 1810628471163081341 to node1 at attempt 3

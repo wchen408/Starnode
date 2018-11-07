@@ -1,0 +1,76 @@
+Sample for TCP Client:
+$ python rmtcalc.py TCP 13001
+Please type an operation: 2 + 2
+[TCP] Result = 4, from Luming
+Please type an operation: 1 - 3
+[TCP] Result = -2, from Luming
+Please type an operation: 4 * 6
+[TCP] Result = 24, from Luming
+Please type an operation: 8 / 0
+[TCP] Result = ...............,ERR: Divide by 0 from Luming
+Please type an operation: z / x
+[TCP] Result = ...............,ERR: Invalid Operand from Luming
+Please type an operation: r * -a
+[TCP] Result = ...............,ERR: Invalid Operand from Luming
+Please type an operation: -9 / 2
+[TCP] Result = -4.5, from Luming
+Please type an operation: -2 * -14
+[TCP] Result = 28, from Luming
+
+Sample for TCP Server:
+$ python rmtcalc-srv.py TCP 13001
+Connection address: ('127.0.0.1', 53663)
+Received Message: +2.0000000000000+2.0000000000000+
+Modified Message = +4.0000000000000 from Luming
+Received Message: +1.0000000000000+3.0000000000000-
+Modified Message = -2.0000000000000 from Luming
+Received Message: +4.0000000000000+6.0000000000000*
+Modified Message = +24.000000000000 from Luming
+Received Message: +8.0000000000000+0.0000000000000/
+Modified Message = ................ERR: Divide by 0 from Luming
+Received Message: +z.0000000000000+x.0000000000000/
+Modified Message = ................ERR: Invalid Operand from Luming
+Received Message: +r.0000000000000-a.0000000000000*
+Modified Message = ................ERR: Invalid Operand from Luming
+Received Message: -9.0000000000000+2.0000000000000/
+Modified Message = -4.5000000000000 from Luming
+Received Message: -2.0000000000000-14.000000000000*
+Modified Message = +28.000000000000 from Luming
+
+Sample for UDP Client:
+$ python rmtcalc.py UDP 13001
+Please type an operation: 2 + 2
+[UDP] Result = 4, from Luming
+Please type an operation: 1 - 3
+[UDP] Result = -2, from Luming
+Please type an operation: 4 * 6
+[UDP] Result = 24, from Luming
+Please type an operation: 8 / 0
+[UDP] Result = ...............,ERR: Divide by 0 from Luming
+Please type an operation: z / x
+[UDP] Result = ...............,ERR: Invalid Operand from Luming
+Please type an operation: r * -a
+[UDP] Result = ...............,ERR: Invalid Operand from Luming
+Please type an operation: -9 / 2
+[UDP] Result = -4.5, from Luming
+Please type an operation: -2 * -14
+[UDP] Result = 28, from Luming
+
+Sample for UDP Server:
+$ python rmtcalc-srv.py UDP 13001
+Received Message: +2.0000000000000+2.0000000000000+
+Modified Message = +4.0000000000000 from Luming
+Received Message: +1.0000000000000+3.0000000000000-
+Modified Message = -2.0000000000000 from Luming
+Received Message: +4.0000000000000+6.0000000000000*
+Modified Message = +24.000000000000 from Luming
+Received Message: +8.0000000000000+0.0000000000000/
+Modified Message = ................ERR: Divide by 0 from Luming
+Received Message: +z.0000000000000+x.0000000000000/
+Modified Message = ................ERR: Invalid Operand from Luming
+Received Message: +r.0000000000000-a.0000000000000*
+Modified Message = ................ERR: Invalid Operand from Luming
+Received Message: -9.0000000000000+2.0000000000000/
+Modified Message = -4.5000000000000 from Luming
+Received Message: -2.0000000000000-14.000000000000*
+Modified Message = +28.000000000000 from Luming

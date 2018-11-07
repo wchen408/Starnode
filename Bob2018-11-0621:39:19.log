@@ -1,0 +1,7 @@
+2018-11-06 16:39:19 DEBUG socket created successfully at port 1222
+2018-11-06 16:39:19 DEBUG Listener worker started.
+2018-11-06 16:39:19 DEBUG Sender worker started.
+2018-11-06 16:39:19 WARNING Attempt to contact POC with 5 more tries
+2018-11-06 16:39:19 DEBUG Send: packetType.KNOCKKNOCK 688031497250277895 to POC at attempt 1
+2018-11-06 16:39:19 DEBUG Received packetType.KNOCKKNOCK 691284952156867079 with payload=[None] from Alex
+2018-11-06 16:39:19 DEBUG Received packetType.ACK 691443831587080711 with payload=[688031497250277895] from Alex

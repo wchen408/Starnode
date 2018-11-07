@@ -1,0 +1,215 @@
+2018-11-06 21:49:52 DEBUG socket created successfully at port 1222
+2018-11-06 21:49:52 DEBUG Listener worker started.
+2018-11-06 21:49:52 DEBUG Sender worker started.
+2018-11-06 21:49:52 WARNING Attempt to contact POC with 5 more tries
+2018-11-06 21:49:52 DEBUG Send: packetType.KNOCKKNOCK 277644279741043408 to POC at attempt 1
+2018-11-06 21:49:52 DEBUG Received packetType.KNOCKKNOCK 279594813368718032 with payload=[None] from node1
+2018-11-06 21:49:52 DEBUG Send: packetType.ACK 281089049670865616 to node1
+2018-11-06 21:49:52 DEBUG Received packetType.ACK 279666281624523472 with payload=[277644279741043408] from node1
+2018-11-06 21:49:52 DEBUG Send: packetType.KNOCKRPLY 281605820135920336 to node2 at attempt 1
+2018-11-06 21:49:52 DEBUG Send: packetType.KNOCKRPLY 281997796031222480 to node1 at attempt 1
+2018-11-06 21:49:52 INFO Node node1 joined the network
+2018-11-06 21:49:52 DEBUG Received packetType.KNOCKRPLY 280586572856971984 with payload=[{'192.168.1.641222': {'name': 'node2', 'host': '192.168.1.64', 'port': 1222}}] from node1
+2018-11-06 21:49:52 DEBUG Send: packetType.ACK 285126456368059088 to node1
+2018-11-06 21:49:52 DEBUG Received packetType.KNOCKRPLY 281605820135920336 with payload=[{'192.168.1.641111': {'name': 'node1', 'host': '192.168.1.64', 'port': 1111}}] from node2
+2018-11-06 21:49:52 DEBUG Send: packetType.ACK 286291388937687760 to node2
+2018-11-06 21:49:52 DEBUG Received packetType.KNOCKRPLY 281760301519622864 with payload=[{'192.168.1.641222': {'name': 'node2', 'host': '192.168.1.64', 'port': 1222}, '192.168.1.641444': {'name': 'node3', 'host': '192.168.1.64', 'port': 1444}, '192.168.1.641111': {'name': 'node1', 'host': '192.168.1.64', 'port': 1111}}] from node1
+2018-11-06 21:49:52 DEBUG Send: packetType.ACK 288197942100251344 to node1
+2018-11-06 21:49:52 INFO Node node3 joined the network.
+2018-11-06 21:49:52 DEBUG Received packetType.ACK 286383198158607056 with payload=[281997796031222480] from node1
+2018-11-06 21:49:52 DEBUG Received packetType.ACK 286291388937687760 with payload=[281605820135920336] from node2
+2018-11-06 21:49:55 DEBUG Send: packetType.RTTSUM 301726333168407251 to node3 at attempt 1
+2018-11-06 21:49:55 DEBUG Send: packetType.RTTSUM 301883013575365331 to node1 at attempt 1
+2018-11-06 21:49:55 DEBUG Received packetType.ACK 304516343923888851 with payload=[301726333168407251] from node3
+2018-11-06 21:49:55 DEBUG Received packetType.ACK 306172208435319507 with payload=[301883013575365331] from node1
+2018-11-06 21:49:55 DEBUG Received packetType.RTTSUM 1736592855706784467 with payload=[0.008253097534179688] from node1
+2018-11-06 21:49:55 DEBUG Send: packetType.ACK 1738790229694894803 to node1
+2018-11-06 21:49:55 DEBUG Received packetType.RTTSUM 1741049726089974483 with payload=[9.223372036854776e+18] from node3
+2018-11-06 21:49:55 DEBUG Send: packetType.ACK 1744231712740758227 to node3
+2018-11-06 21:49:59 INFO Heartbeat from node2 with RTTSUM: 9223372036854775808.000000			
+				# of active peer(s) in the network: 3 			
+				peers: ['node2', 'node3', 'node1'] 			
+ 				Hub: {node1}
+2018-11-06 21:50:00 DEBUG Send: packetType.RTTSUM 314982595108688600 to node3 at attempt 1
+2018-11-06 21:50:00 DEBUG Received packetType.ACK 317034833561932504 with payload=[314982595108688600] from node3
+2018-11-06 21:50:00 DEBUG Send: packetType.RTTSUM 315116735527277272 to node1 at attempt 1
+2018-11-06 21:50:00 DEBUG Received packetType.ACK 319654420015108824 with payload=[315116735527277272] from node1
+2018-11-06 21:50:00 DEBUG Received packetType.RTTSUM 1746837555298587352 with payload=[0.008296012878417969] from node1
+2018-11-06 21:50:00 DEBUG Send: packetType.ACK 1750252638414459608 to node1
+2018-11-06 21:50:00 DEBUG Received packetType.RTTSUM 1749129487286686424 with payload=[0.007035255432128906] from node3
+2018-11-06 21:50:00 DEBUG Send: packetType.ACK 1752336762704909016 to node3
+2018-11-06 21:50:04 INFO Heartbeat from node2 with RTTSUM: 0.007357			
+				# of active peer(s) in the network: 3 			
+				peers: ['node2', 'node3', 'node1'] 			
+ 				Hub: {node1}
+2018-11-06 21:50:05 DEBUG Send: packetType.RTTSUM 326784203165422301 to node3 at attempt 1
+2018-11-06 21:50:05 DEBUG Received packetType.ACK 329209725816296157 with payload=[326784203165422301] from node3
+2018-11-06 21:50:05 DEBUG Send: packetType.RTTSUM 326929338700288733 to node1 at attempt 1
+2018-11-06 21:50:05 DEBUG Received packetType.ACK 330869988374237917 with payload=[326929338700288733] from node1
+2018-11-06 21:50:05 DEBUG Received packetType.RTTSUM 1757991001250747101 with payload=[0.007815122604370117] from node1
+2018-11-06 21:50:05 DEBUG Send: packetType.ACK 1763628747122168541 to node1
+2018-11-06 21:50:05 DEBUG Received packetType.RTTSUM 1763065797168747229 with payload=[0.007584333419799805] from node3
+2018-11-06 21:50:05 DEBUG Send: packetType.ACK 1768706291819238109 to node3
+2018-11-06 21:50:09 INFO Heartbeat from node2 with RTTSUM: 0.007341			
+				# of active peer(s) in the network: 3 			
+				peers: ['node2', 'node3', 'node1'] 			
+ 				Hub: {node1}
+2018-11-06 21:50:10 DEBUG Send: packetType.RTTSUM 341670491093881570 to node3 at attempt 1
+2018-11-06 21:50:10 DEBUG Received packetType.ACK 344458302826107618 with payload=[341670491093881570] from node3
+2018-11-06 21:50:10 DEBUG Send: packetType.RTTSUM 341811228582236898 to node1 at attempt 1
+2018-11-06 21:50:10 DEBUG Received packetType.ACK 346768926511878882 with payload=[341811228582236898] from node1
+2018-11-06 21:50:10 DEBUG Received packetType.RTTSUM 1765348933063824098 with payload=[0.009324073791503906] from node1
+2018-11-06 21:50:10 DEBUG Send: packetType.ACK 1767843724947247842 to node1
+2018-11-06 21:50:10 DEBUG Received packetType.RTTSUM 1778476002387841762 with payload=[0.0066831111907958984] from node3
+2018-11-06 21:50:10 DEBUG Send: packetType.ACK 1780931761608479458 to node3
+2018-11-06 21:50:14 INFO Heartbeat from node2 with RTTSUM: 0.007137			
+				# of active peer(s) in the network: 3 			
+				peers: ['node2', 'node3', 'node1'] 			
+ 				Hub: {node1}
+2018-11-06 21:50:15 DEBUG Send: packetType.RTTSUM 353827241406386919 to node3 at attempt 1
+2018-11-06 21:50:15 DEBUG Received packetType.ACK 356086737801466599 with payload=[353827241406386919] from node3
+2018-11-06 21:50:15 DEBUG Send: packetType.RTTSUM 353978974011020007 to node1 at attempt 1
+2018-11-06 21:50:15 DEBUG Received packetType.ACK 357841558359397095 with payload=[353978974011020007] from node1
+2018-11-06 21:50:15 DEBUG Received packetType.RTTSUM 1769690904481911527 with payload=[0.006212949752807617] from node1
+2018-11-06 21:50:15 DEBUG Send: packetType.ACK 1772190094411846375 to node1
+2018-11-06 21:50:15 DEBUG Received packetType.RTTSUM 1784745417689420519 with payload=[0.00743412971496582] from node3
+2018-11-06 21:50:15 DEBUG Send: packetType.ACK 1788531585979667175 to node3
+2018-11-06 21:50:19 INFO Heartbeat from node2 with RTTSUM: 0.007397			
+				# of active peer(s) in the network: 3 			
+				peers: ['node2', 'node3', 'node1'] 			
+ 				Hub: {node1}
+2018-11-06 21:50:20 DEBUG Send: packetType.RTTSUM 367943321439589100 to node3 at attempt 1
+2018-11-06 21:50:20 DEBUG Received packetType.ACK 370378189939299052 with payload=[367943321439589100] from node3
+2018-11-06 21:50:20 DEBUG Send: packetType.RTTSUM 368079660881433324 to node1 at attempt 1
+2018-11-06 21:50:20 DEBUG Received packetType.ACK 372642634136703724 with payload=[368079660881433324] from node1
+2018-11-06 21:50:20 DEBUG Received packetType.RTTSUM 1779942750899294956 with payload=[0.006230831146240234] from node1
+2018-11-06 21:50:20 DEBUG Send: packetType.ACK 1782499665189688044 to node1
+2018-11-06 21:50:20 DEBUG Received packetType.RTTSUM 1794185824525505260 with payload=[0.007508039474487305] from node3
+2018-11-06 21:50:20 DEBUG Send: packetType.ACK 1796616294978704108 to node3
+2018-11-06 21:50:24 INFO Heartbeat from node2 with RTTSUM: 0.006530			
+				# of active peer(s) in the network: 3 			
+				peers: ['node2', 'node3', 'node1'] 			
+ 				Hub: {node1}
+2018-11-06 21:50:25 DEBUG Send: packetType.RTTSUM 370894960404353777 to node3 at attempt 1
+2018-11-06 21:50:25 DEBUG Received packetType.ACK 373461220543582961 with payload=[370894960404353777] from node3
+2018-11-06 21:50:25 DEBUG Send: packetType.RTTSUM 371026352043873009 to node1 at attempt 1
+2018-11-06 21:50:25 DEBUG Received packetType.ACK 375880146124690161 with payload=[371026352043873009] from node1
+2018-11-06 21:50:25 DEBUG Received packetType.RTTSUM 1783230840422159089 with payload=[0.006172895431518555] from node1
+2018-11-06 21:50:25 DEBUG Send: packetType.ACK 1786046139945079537 to node1
+2018-11-06 21:50:25 DEBUG Received packetType.RTTSUM 1806014370617119473 with payload=[0.007158994674682617] from node3
+2018-11-06 21:50:25 DEBUG Send: packetType.ACK 1808172711942443761 to node3
+2018-11-06 21:50:29 INFO Heartbeat from node2 with RTTSUM: 0.007237			
+				# of active peer(s) in the network: 3 			
+				peers: ['node2', 'node3', 'node1'] 			
+ 				Hub: {node1}
+2018-11-06 21:50:30 DEBUG Send: packetType.RTTSUM 377083561601290998 to node3 at attempt 1
+2018-11-06 21:50:30 DEBUG Received packetType.ACK 379627281752150774 with payload=[377083561601290998] from node3
+2018-11-06 21:50:30 DEBUG Send: packetType.RTTSUM 377233644938482422 to node1 at attempt 1
+2018-11-06 21:50:30 DEBUG Received packetType.ACK 382124272658830070 with payload=[377233644938482422] from node1
+2018-11-06 21:50:30 DEBUG Received packetType.RTTSUM 1790021424235303670 with payload=[0.006579875946044922] from node1
+2018-11-06 21:50:30 DEBUG Send: packetType.ACK 1792166021665280758 to node1
+2018-11-06 21:50:30 DEBUG Received packetType.RTTSUM 1813478405302276854 with payload=[0.0073130130767822266] from node3
+2018-11-06 21:50:30 DEBUG Send: packetType.ACK 1815950657197331190 to node3
+2018-11-06 21:50:34 INFO Heartbeat from node2 with RTTSUM: 0.007488			
+				# of active peer(s) in the network: 3 			
+				peers: ['node2', 'node3', 'node1'] 			
+ 				Hub: {node1}
+2018-11-06 21:50:35 DEBUG Send: packetType.RTTSUM 382237522356491003 to node3 at attempt 1
+2018-11-06 21:50:35 DEBUG Received packetType.ACK 385236990077063931 with payload=[382237522356491003] from node3
+2018-11-06 21:50:35 DEBUG Send: packetType.RTTSUM 382382657891357435 to node1 at attempt 1
+2018-11-06 21:50:35 DEBUG Received packetType.ACK 387437112844243707 with payload=[382382657891357435] from node1
+2018-11-06 21:50:35 DEBUG Received packetType.RTTSUM 1795354605385831163 with payload=[0.0063288211822509766] from node1
+2018-11-06 21:50:35 DEBUG Send: packetType.ACK 1797879633839018747 to node1
+2018-11-06 21:50:35 DEBUG Received packetType.RTTSUM 1823919367719637755 with payload=[0.007346153259277344] from node3
+2018-11-06 21:50:35 DEBUG Send: packetType.ACK 1825934772533351163 to node3
+2018-11-06 21:50:39 INFO Heartbeat from node2 with RTTSUM: 0.007416			
+				# of active peer(s) in the network: 3 			
+				peers: ['node2', 'node3', 'node1'] 			
+ 				Hub: {node1}
+2018-11-06 21:50:40 DEBUG Send: packetType.RTTSUM 389014362274288384 to node3 at attempt 1
+2018-11-06 21:50:40 DEBUG Received packetType.ACK 392013829994861312 with payload=[389014362274288384] from node3
+2018-11-06 21:50:40 DEBUG Send: packetType.RTTSUM 389168843657990912 to node1 at attempt 1
+2018-11-06 21:50:40 DEBUG Received packetType.ACK 393559193587700480 with payload=[389168843657990912] from node1
+2018-11-06 21:50:40 DEBUG Received packetType.RTTSUM 1801810937664131840 with payload=[0.0062372684478759766] from node1
+2018-11-06 21:50:40 DEBUG Send: packetType.ACK 1804552569907991296 to node1
+2018-11-06 21:50:40 DEBUG Received packetType.RTTSUM 1839362008531751680 with payload=[0.0073642730712890625] from node3
+2018-11-06 21:50:40 DEBUG Send: packetType.ACK 1841803474101228288 to node3
+2018-11-06 21:50:44 INFO Heartbeat from node2 with RTTSUM: 0.007467			
+				# of active peer(s) in the network: 3 			
+				peers: ['node2', 'node3', 'node1'] 			
+ 				Hub: {node1}
+2018-11-06 21:50:45 DEBUG Send: packetType.RTTSUM 392980300715676421 to node3 at attempt 1
+2018-11-06 21:50:45 DEBUG Received packetType.ACK 395318412192142085 with payload=[392980300715676421] from node3
+2018-11-06 21:50:45 DEBUG Send: packetType.RTTSUM 393118839180776197 to node1 at attempt 1
+2018-11-06 21:50:45 DEBUG Received packetType.ACK 397937998645318405 with payload=[393118839180776197] from node1
+2018-11-06 21:50:45 DEBUG Received packetType.RTTSUM 1804986327245148933 with payload=[0.005876064300537109] from node1
+2018-11-06 21:50:45 DEBUG Send: packetType.ACK 1807598766872744709 to node1
+2018-11-06 21:50:45 DEBUG Received packetType.RTTSUM 1851407708169851653 with payload=[0.007097959518432617] from node3
+2018-11-06 21:50:45 DEBUG Send: packetType.ACK 1854741977181082373 to node3
+2018-11-06 21:50:49 INFO Heartbeat from node2 with RTTSUM: 0.007293			
+				# of active peer(s) in the network: 3 			
+				peers: ['node2', 'node3', 'node1'] 			
+ 				Hub: {node1}
+2018-11-06 21:50:50 DEBUG Send: packetType.RTTSUM 401050716063552266 to node3 at attempt 1
+2018-11-06 21:50:50 DEBUG Received packetType.ACK 403562000621392650 with payload=[401050716063552266] from node3
+2018-11-06 21:50:50 DEBUG Send: packetType.RTTSUM 401189254528652042 to node1 at attempt 1
+2018-11-06 21:50:50 DEBUG Received packetType.RTTSUM 1867287954609820426 with payload=[0.007454872131347656] from node3
+2018-11-06 21:50:50 DEBUG Send: packetType.ACK 1870204958958310154 to node3
+2018-11-06 21:50:51 DEBUG Send: packetType.RTTSUM 401189254528652042 to node1 at attempt 2
+2018-11-06 21:50:52 DEBUG Send: packetType.RTTSUM 401189254528652042 to node1 at attempt 3
+2018-11-06 21:50:53 INFO Node node1 exited the network
+2018-11-06 21:50:54 INFO Heartbeat from node2 with RTTSUM: 0.007484			
+				# of active peer(s) in the network: 3 			
+				peers: ['node2', 'node3', 'node1'] 			
+ 				Hub: {node3}
+2018-11-06 21:50:55 DEBUG Send: packetType.RTTSUM 412383932166853391 to node3 at attempt 1
+2018-11-06 21:50:55 DEBUG Send: packetType.RTTSUM 412529067701719823 to node1 at attempt 1
+2018-11-06 21:50:55 DEBUG Received packetType.ACK 415194833643262735 with payload=[412383932166853391] from node3
+2018-11-06 21:50:55 DEBUG Received packetType.RTTSUM 1879946631980405519 with payload=[0.005632162094116211] from node3
+2018-11-06 21:50:55 DEBUG Send: packetType.ACK 1882423281921970959 to node3
+2018-11-06 21:50:56 DEBUG Send: packetType.RTTSUM 412529067701719823 to node1 at attempt 2
+2018-11-06 21:50:57 DEBUG Send: packetType.RTTSUM 412529067701719823 to node1 at attempt 3
+2018-11-06 21:50:59 INFO Heartbeat from node2 with RTTSUM: 0.005879			
+				# of active peer(s) in the network: 2 			
+				peers: ['node2', 'node3'] 			
+ 				Hub: {node3}
+2018-11-06 21:51:00 DEBUG Send: packetType.RTTSUM 419227842293945108 to node3 at attempt 1
+2018-11-06 21:51:00 DEBUG Received packetType.ACK 421904603351765780 with payload=[419227842293945108] from node3
+2018-11-06 21:51:00 DEBUG Send: packetType.RTTSUM 419379574898578196 to node1 at attempt 1
+2018-11-06 21:51:00 DEBUG Received packetType.RTTSUM 1894805981873984276 with payload=[0.005866050720214844] from node3
+2018-11-06 21:51:00 DEBUG Send: packetType.ACK 1897577300931793684 to node3
+2018-11-06 21:51:01 DEBUG Send: packetType.RTTSUM 419379574898578196 to node1 at attempt 2
+2018-11-06 21:51:02 DEBUG Send: packetType.RTTSUM 419379574898578196 to node1 at attempt 3
+2018-11-06 21:51:04 INFO Heartbeat from node2 with RTTSUM: 0.005797			
+				# of active peer(s) in the network: 2 			
+				peers: ['node2', 'node3'] 			
+ 				Hub: {node3}
+2018-11-06 21:51:05 DEBUG Send: packetType.RTTSUM 424187739246842649 to node3 at attempt 1
+2018-11-06 21:51:05 DEBUG Received packetType.ACK 427099795793007385 with payload=[424187739246842649] from node3
+2018-11-06 21:51:05 DEBUG Send: packetType.RTTSUM 424330675758453529 to node1 at attempt 1
+2018-11-06 21:51:05 DEBUG Received packetType.RTTSUM 1906344256895865625 with payload=[0.006014108657836914] from node3
+2018-11-06 21:51:05 DEBUG Send: packetType.ACK 1908915464837419801 to node3
+2018-11-06 21:51:06 DEBUG Send: packetType.RTTSUM 424330675758453529 to node1 at attempt 2
+2018-11-06 21:51:07 DEBUG Send: packetType.RTTSUM 424330675758453529 to node1 at attempt 3
+2018-11-06 21:51:09 INFO Heartbeat from node2 with RTTSUM: 0.006071			
+				# of active peer(s) in the network: 2 			
+				peers: ['node2', 'node3'] 			
+ 				Hub: {node3}
+2018-11-06 21:51:10 DEBUG Send: packetType.RTTSUM 434067950734037790 to node3 at attempt 1
+2018-11-06 21:51:10 DEBUG Received packetType.ACK 436185060373320478 with payload=[434067950734037790] from node3
+2018-11-06 21:51:10 DEBUG Send: packetType.RTTSUM 434201541396812574 to node1 at attempt 1
+2018-11-06 21:51:10 DEBUG Received packetType.RTTSUM 1911562539081290526 with payload=[0.005777120590209961] from node3
+2018-11-06 21:51:10 DEBUG Send: packetType.ACK 1913395424964793118 to node3
+2018-11-06 21:51:11 DEBUG Send: packetType.RTTSUM 434201541396812574 to node1 at attempt 2
+2018-11-06 21:51:12 DEBUG Send: packetType.RTTSUM 434201541396812574 to node1 at attempt 3
+2018-11-06 21:51:14 INFO Heartbeat from node2 with RTTSUM: 0.006330			
+				# of active peer(s) in the network: 2 			
+				peers: ['node2', 'node3'] 			
+ 				Hub: {node3}
+2018-11-06 21:51:15 DEBUG Send: packetType.RTTSUM 446738722732528419 to node3 at attempt 1
+2018-11-06 21:51:15 DEBUG Send: packetType.RTTSUM 446870114372047651 to node1 at attempt 1
+2018-11-06 21:51:16 DEBUG Send: packetType.RTTSUM 446738722732528419 to node3 at attempt 2
+2018-11-06 21:51:16 DEBUG Send: packetType.RTTSUM 446870114372047651 to node1 at attempt 2
+2018-11-06 21:51:17 DEBUG Send: packetType.RTTSUM 446738722732528419 to node3 at attempt 3
+2018-11-06 21:51:17 DEBUG Send: packetType.RTTSUM 446870114372047651 to node1 at attempt 3
+2018-11-06 21:51:18 INFO Node node3 exited the network

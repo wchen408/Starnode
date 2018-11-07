@@ -1,0 +1,47 @@
+2018-11-06 21:39:05 DEBUG socket created successfully at port 1111
+2018-11-06 21:39:05 DEBUG Listener worker started.
+2018-11-06 21:39:05 DEBUG Sender worker started.
+2018-11-06 21:39:05 WARNING Exiting in 20 seconds if no peers emerge
+2018-11-06 21:39:05 INFO Node secondnode joined the network
+2018-11-06 21:39:05 DEBUG Received packetType.KNOCKKNOCK 2254501315296251976 with payload=[None] from secondnode
+2018-11-06 21:39:05 DEBUG Send: packetType.KNOCKKNOCK 2278820863235215433 to secondnode at attempt 1
+2018-11-06 21:39:05 DEBUG Send: packetType.ACK 2278945108049154121 to secondnode
+2018-11-06 21:39:05 DEBUG Received packetType.ACK 2294320678651973705 with payload=[2278820863235215433] from secondnode
+2018-11-06 21:39:06 DEBUG Send: packetType.KNOCKRPLY 2279819219793236041 to firstnode at attempt 1
+2018-11-06 21:39:06 DEBUG Send: packetType.KNOCKRPLY 2279927521688571977 to secondnode at attempt 1
+2018-11-06 21:39:06 DEBUG Send: packetType.KNOCKRPLY 2279998989944377417 to secondnode at attempt 1
+2018-11-06 21:39:06 DEBUG Received packetType.KNOCKRPLY 2279819219793236041 with payload=[{'192.168.1.641222': {'port': 1222, 'host': '192.168.1.64', 'name': 'secondnode'}}] from firstnode
+2018-11-06 21:39:06 DEBUG Received packetType.KNOCKRPLY 2295259111826280521 with payload=[{'192.168.1.641222': {'port': 1222, 'host': '192.168.1.64', 'name': 'secondnode'}}] from secondnode
+2018-11-06 21:39:06 DEBUG Received packetType.ACK 7429401610440778 with payload=[2279927521688571977] from secondnode
+2018-11-06 21:39:06 DEBUG Send: packetType.ACK 11831296412241994 to firstnode
+2018-11-06 21:39:06 DEBUG Send: packetType.ACK 13673528144580682 to secondnode
+2018-11-06 21:39:06 DEBUG Received packetType.ACK 11831296412241994 with payload=[2279819219793236041] from firstnode
+2018-11-06 21:39:06 DEBUG Received packetType.ACK 13655386202722378 with payload=[2279998989944377417] from secondnode
+2018-11-06 21:39:10 DEBUG Received packetType.RTTSUM 29279446433419342 with payload=[0.0190279483795166] from secondnode
+2018-11-06 21:39:10 DEBUG Send: packetType.ACK 32579080828375118 to secondnode
+2018-11-06 21:39:11 DEBUG Send: packetType.RTTSUM 10196322621739087 to secondnode at attempt 1
+2018-11-06 21:39:11 DEBUG Received packetType.ACK 11997322668036175 with payload=[10196322621739087] from secondnode
+2018-11-06 21:39:15 DEBUG Heartbeat from firstnode with RTTSUM: 0.016769			
+				# of active peer(s) in the network: 2 			
+				peers: ['firstnode', 'secondnode'] 			
+ 				Hub: {secondnode}
+2018-11-06 21:39:15 DEBUG Received packetType.RTTSUM 34343247235141715 with payload=[0.011626958847045898] from secondnode
+2018-11-06 21:39:15 DEBUG Send: packetType.ACK 36955686862737491 to secondnode
+2018-11-06 21:39:16 DEBUG Send: packetType.RTTSUM 18760418690486356 to secondnode at attempt 1
+2018-11-06 21:39:16 DEBUG Received packetType.ACK 21333825655296084 with payload=[18760418690486356] from secondnode
+2018-11-06 21:39:20 DEBUG Heartbeat from firstnode with RTTSUM: 0.012779			
+				# of active peer(s) in the network: 2 			
+				peers: ['firstnode', 'secondnode'] 			
+ 				Hub: {secondnode}
+2018-11-06 21:39:20 DEBUG Received packetType.RTTSUM 47460970710323288 with payload=[0.011354923248291016] from secondnode
+2018-11-06 21:39:20 DEBUG Send: packetType.ACK 49942018698399832 to secondnode
+2018-11-06 21:39:21 DEBUG Send: packetType.RTTSUM 26010048608227417 to secondnode at attempt 1
+2018-11-06 21:39:21 DEBUG Received packetType.ACK 27981472956829785 with payload=[26010048608227417] from secondnode
+2018-11-06 21:39:25 DEBUG Heartbeat from firstnode with RTTSUM: 0.013359			
+				# of active peer(s) in the network: 2 			
+				peers: ['firstnode', 'secondnode'] 			
+ 				Hub: {secondnode}
+2018-11-06 21:39:25 DEBUG Received packetType.RTTSUM 61135047069159517 with payload=[0.011477947235107422] from secondnode
+2018-11-06 21:39:25 DEBUG Send: packetType.ACK 63224119161933917 to secondnode
+2018-11-06 21:39:26 DEBUG Send: packetType.RTTSUM 34493330572333150 to secondnode at attempt 1
+2018-11-06 21:39:26 DEBUG Received packetType.ACK 36990321479012446 with payload=[34493330572333150] from secondnode

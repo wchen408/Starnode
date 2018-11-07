@@ -1,17 +1,19 @@
 #!/usr/bin/env python
 import sys
-
 if sys.version_info[0] != 3 or sys.version_info[1] < 0:
     print("This script requires Python version 3.0")
     sys.exit(1)
 
 import threading
+import subprocess
 import socket
 import sys
 import json
 import queue
 import logging
 import time
+import fcntl
+import struct
 from enum import IntEnum
 
 class packetType(IntEnum):
@@ -26,22 +28,36 @@ class packetType(IntEnum):
 
 class StarNode:
 
-	def __init__(self, hostname, port, hostPOC, portPOC, maxNode):
+	def __init__(self, name, port, hostPOC, portPOC, maxNode):
+
+		#populate instance variables
+		self.name = name
+
+		#obtain IP of this node
+		# self.ip = socket.gethostbyname(socket.gethostname())
+		self.ip = socket.gethostbyname(socket.gethostname())
+		self.port = port
+		self.hub = self.name
+		self.nameKey = self.ip + str(self.port)
+
+
+		#POC variable instantiation
+		self.ipPOC = None
+		self.portPOC = None
+		self.namePOC = None
+		self.nameKeyPOC = None
 
 		#instantiate critical data structures, mutex locks, condition variables, logger
 		self.dsSetup()
 
-		#populate instance variables
-		self.hostname = hostname
-		self.port = port
-		self.hub = self.hostname
-		self.hostPOC = hostPOC
-		self.portPOC = portPOC
-
-		self.peersLock.acquire()
-		self.peers[self.hostname] = {"port": self.port, "RTT": 0, "RTTSUM": sys.maxsize}
+		self.peersLock.acquire() 
+		self.peers[self.nameKey] = {"name": self.name, "host": self.ip, "port": self.port, "RTT": 0, "RTTSUM": sys.maxsize}
 		if (hostPOC != None and portPOC != None):
-			self.peers[hostPOC] = {"port": portPOC, "RTT": sys.maxsize, "RTTSUM": sys.maxsize}
+			self.ipPOC = socket.gethostbyname(hostPOC)
+			self.portPOC = portPOC
+			self.namePOC = "POC"
+			self.nameKeyPOC = self.ipPOC + str(self.portPOC)
+			self.peers[self.ipPOC + str(self.portPOC)] = {"name": "POC", "host": self.ipPOC, "port": portPOC, "RTT": sys.maxsize, "RTTSUM": sys.maxsize}
 		self.peersLock.release()
 
 		#instantiate socket handler
@@ -52,6 +68,7 @@ class StarNode:
 		self.listenerThread.start()
 		self.senderThread = threading.Thread(target=self.sender, name="senderThread")
 		self.senderThread.start()
+		
 
 		threading.Thread(target=self.countingDown, args=(self.probingMaxAttempts,)).start()
 		#self.countingDown(self.probingMaxAttempts)
@@ -60,7 +77,6 @@ class StarNode:
 	Threadworker that listens to the socket to for any incoming packet and perform actions correspondingly. 
 	{ACK: Delete Entry from the Resend Stack} 
 	{BDATA, DATA, VOTE, RTTSUM: Reply ACK to the sender} 
-	{VOTE:     } 
 	{RTTSUM:    }
 	'''
 	def listener(self):
@@ -71,9 +87,30 @@ class StarNode:
 			packet = packet.decode()
 			packet = json.loads(packet)	
 
+			# if senderHost == self.hostPOC:
+			# 	self.peers[senderName] = self.peers.pop(self.namePOC)
+			# 	self.namePOC = senderName
+
+			senderName = packet["srcName"]
+			senderHost = packet["srcHost"] 
+			senderPort = packet["srcPort"] 
+			rType = packet["TYPE"] 
+			rHash = packet["hash"] 
+			rPayload = packet["payload"] 
+			#key used to index into self.peers
+			srcKey = senderHost + str(senderPort)
+
+
+
 			self.peersLock.acquire()
-			if packet["TYPE"] == packetType.TERMINATE:
-				self.peers[self.hostname]["RTT"] = sys.maxsize
+
+			#update the name of POC if haven't already
+			if self.namePOC == "POC" and srcKey == self.nameKeyPOC:
+				self.namePOC = senderName
+				self.peers[srcKey]["name"] = senderName
+
+			if rType == packetType.TERMINATE:
+				self.peers[srcKey]["RTT"] = sys.maxsize
 				self.peerscv.notify()
 				self.peersLock.release()
 				break
@@ -85,67 +122,78 @@ class StarNode:
 				'''
 
 				##TODO add try&except statement to handle duplicate ACK packets
-				if (packet["TYPE"] == packetType.ACK):
-					self.logger.debug("Received %s %d with payload=[%s] from %s", packetType(packet["TYPE"]), packet["hash"], packet["payload"], packet["srcHost"])
+				if (rType == packetType.ACK):
+					self.logger.debug("Received %s %d with payload=[%s] from %s", packetType(rType), rHash, rPayload, senderName)
 					self.waitAckLock.acquire()
+
 					try:
 						# cancel the timer object
-						self.waitAckPackets[packet["payload"]]["timer"].cancel()
+						self.waitAckPackets[rPayload]["timer"].cancel()
 						# update RTT of the peer
 					except:
-						self.logger.debug("Attmpted to cancel packet %d failed", packet["hash"])
-					oldRTT = self.peers[packet["srcHost"]]["RTT"]
+						self.logger.debug("Attmpted to cancel packet %d failed", rHash)
+
+					# cancel the timer object
+					self.waitAckPackets[rPayload]["timer"].cancel()
+
+					# update RTT of the peer
+					oldRTT = self.peers[srcKey]["RTT"]
 					timeNow = time.time()
-					self.peers[packet["srcHost"]]["RTT"] = timeNow - self.waitAckPackets[packet["payload"]]["LST"]
+					self.peers[srcKey]["RTT"] = timeNow - self.waitAckPackets[rPayload]["LST"]
+
 					# pop off entry from the self.waitAckPackets
-					del self.waitAckPackets[packet["payload"]]
+					del self.waitAckPackets[rPayload]
+
 					# notify the network if the node if previously dead
 					if oldRTT == sys.maxsize:
-						self.logger.info("Node %s joined the network", packet["srcHost"])
+						self.logger.info("Node %s joined the network", senderName)
 						self.peerscv.notify()
 					self.waitAckLock.release()
 				else:
-					#reply ACK via sendTo()
-					self.sendTo(packetType.ACK, packet["hash"], packet["srcHost"])
 
-					if packet["srcHost"] not in self.peers:
-						self.peers[packet["srcHost"]] = {"port": packet["srcPort"], "RTT": sys.maxsize-1, "RTTSUM": sys.maxsize}
-						self.logger.info("Node %s joined the network", packet["srcHost"])
+					if srcKey not in self.peers.keys():
+						self.peers[srcKey] = {"name": senderName, "host": senderHost, "port": senderPort, "RTT": sys.maxsize-1, "RTTSUM": sys.maxsize}
+						self.logger.info("Node %s joined the network", senderName)
 						self.peerscv.notify()
 						#send a dummy packet right away to measure RTT
-						self.sendTo(packetType.KNOCKKNOCK, None, packet["srcHost"])
+						self.sendTo(packetType.KNOCKKNOCK, None, senderName)
+
+					#reply ACK via sendTo()
+					self.sendTo(packetType.ACK, rHash, senderName)
 					
-					if packet["TYPE"] == packetType.DATA:
-						self.logger.info("Received [%s] from %s.",packet["payload"], packet["srcHost"])
-					elif packet["TYPE"] == packetType.BDATA:
-						self.broadcast(packet["payload"])
-					elif packet["TYPE"] == packetType.KNOCKKNOCK:
-						self.logger.debug("Received %s %d with payload=[%s] from %s", packetType(packet["TYPE"]), packet["hash"], packet["payload"], packet["srcHost"])
+					if rType == packetType.DATA:
+						self.logger.info("Received [%s] from %s.",rPayload, senderName)
+					elif rType == packetType.BDATA:
+						self.broadcast(rPayload)
+					elif rType == packetType.KNOCKKNOCK:
+						self.logger.debug("Received %s %d with payload=[%s] from %s", packetType(rType), rHash, rPayload, senderName)
 						#Introduce the network to the node knocked on the door
-						nodesnports = {}
-						for each in self.peers:
+						exisiting_nodesnports = {}
+						newnode = {}
+						newnode[srcKey] = {"name": senderName, "port": senderPort, "host": senderHost}
+						for each in self.peers.keys():
 							if self.peers[each]["RTT"] != sys.maxsize:
-								self.sendTo(packetType.KNOCKRPLY, {packet["srcHost"]:packet["srcPort"]}, each)
-								nodesnports[each] = self.peers[each]["port"]
-						self.sendTo(packetType.KNOCKRPLY, nodesnports, packet["srcHost"])
-					elif packet["TYPE"] == packetType.KNOCKRPLY:
-						self.logger.debug("Received %s %d with payload=[%s] from %s", packetType(packet["TYPE"]), packet["hash"], packet["payload"], packet["srcHost"])
-						for newNeighbour in packet["payload"].keys():
-							if newNeighbour not in self.peers:
-								self.logger.info("Node %s joined the network.", newNeighbour)
-								self.peers[newNeighbour] = {"port": packet["payload"][newNeighbour], "RTT": sys.maxsize-1, "RTTSUM": sys.maxsize}
-					elif packet["TYPE"] == packetType.RTTSUM:
-						self.logger.debug("Received %s %d with payload=[%s] from %s", packetType(packet["TYPE"]), packet["hash"], packet["payload"], packet["srcHost"])
-						self.peers[packet["srcHost"]]["RTTSUM"] = packet["payload"]
+								self.sendTo(packetType.KNOCKRPLY, newnode, self.peers[each]["name"])
+								exisiting_nodesnports[each] = {"name": self.peers[each]["name"], "port": self.peers[each]["port"], "host": self.peers[each]["host"]}
+						self.sendTo(packetType.KNOCKRPLY, exisiting_nodesnports, senderName)
+					elif rType == packetType.KNOCKRPLY:
+						self.logger.debug("Received %s %d with payload=[%s] from %s", packetType(rType), rHash, rPayload, senderName)
+						for newNeighbour in rPayload.keys():
+							if newNeighbour not in self.peers.keys():
+								self.logger.info("Node %s joined the network.", rPayload[newNeighbour]["name"])
+								self.peers[newNeighbour] = {"name": rPayload[newNeighbour]["name"], "host": rPayload[newNeighbour]["host"], "port": rPayload[newNeighbour]["port"], "RTT": sys.maxsize-1, "RTTSUM": sys.maxsize}
+					elif rType == packetType.RTTSUM:
+						self.logger.debug("Received %s %d with payload=[%s] from %s", packetType(rType), rHash, rPayload, senderName)
+						self.peers[srcKey]["RTTSUM"] = rPayload
 
 				#perform according to types
 			self.peersLock.release()
 		self.logger.debug("Listener exiting")
 
 	'''Creates packet and pushes into waitMsgQ, notify senderThread.'''
-	def sendTo(self, type, payload, recipient):
+	def sendTo(self, packtype, payload, recipient):
 		#populate an packet
-		packet = {"TYPE": type, "srcHost": self.hostname, \
+		packet = {"TYPE": packtype, "srcName": self.name, "srcHost": self.ip, \
 		"srcPort": self.port, "payload": payload, "hash":hash(time.time())}
 
 		#acquire mutex lock and push to the queue
@@ -160,44 +208,6 @@ class StarNode:
 		self.waitMsgQ.put((packet, recipient))
 		self.waitMsgcv.notify()
 		self.waitMsgLock.release()
-
-	'''ThreadHandler to interact with user'''
-	def console_interaction(self):
-
-		if not self.isCountingDown:
-
-			user_input = input("Starnode Command: ")
-			commands = user_input.split()
-			if len(commands) > 0: 
-				if "disconnect" in commands[0].lower():
-					self.logger.critical("Node Exiting...")
-					return self.__exit__()
-				else:
-					if "send" in commands[0].lower():
-						self.sendTo(packetType.BDATA, " ".join(commands[1:]), self.hub)
-					elif "show-status" in commands[0].lower():
-						status = "Node %s with RTTSUM: %f\
-							\n		# of active peer(s) in the network: %d \
-							\n		peers: %s \
-							\n 		Hub: {%s} with RTTSUM: %f " % \
-							(self.hostname, self.peers[self.hostname]["RTTSUM"], \
-							 self.activeCount, self.activepeers, \
-							  self.hub, self.peers[self.hub]["RTTSUM"])
-						print(status)
-
-					elif "show-log" in commands[0].lower():
-						f = open('logging.log', 'r')
-						for line in f:
-							print(line)
-						f.close()
-					else:
-						self.logger.info("Invalid argument")			
-			
-			return self.console_interaction()
-
-
-
-
 
 	'''Threadworker that sends out packet. For every type except for ACK, push the packet into the waitAckPackets '''
 	def sender(self):
@@ -217,69 +227,115 @@ class StarNode:
 				packet, recipient = self.waitMsgQ.get()
 
 				#retrieve recipient address
-				dst_ipaddr = socket.gethostbyname(recipient)
-				dst_port = self.peers[recipient]["port"]
+				dst_ipaddr = None
+				dst_port = None
+				recipientKey = None
+				for each in self.peers.keys():
+					if self.peers[each]["name"] == recipient:
+						dst_ipaddr = self.peers[each]["host"]
+						dst_port = self.peers[each]["port"]
+						recipientKey = each
 
 				#serialize packet dictionary to jason
 				packet_json = json.dumps(packet)
 
+				sHash = packet["hash"]
+				sName = packet["srcName"]
+				sType = packet["TYPE"]
+
 				timeNow = time.time()
-				if packet["TYPE"] == packetType.ACK or packet["TYPE"] == packetType.TERMINATE:
+				if sType == packetType.ACK or sType == packetType.TERMINATE:
 					self.s_id.sendto(packet_json.encode('ASCII'), (dst_ipaddr, dst_port))
-					self.logger.debug("Send: %s %s to %s", packetType(packet["TYPE"]), packet["hash"], recipient)
-					if packet["TYPE"] == packetType.TERMINATE:
+					self.logger.debug("Send: %s %s to %s", packetType(sType), sHash, recipient)
+					if sType == packetType.TERMINATE:
 						self.logger.debug("Sender exiting")
 						return 0
 
 				else:
-					if packet["hash"] not in self.waitAckPackets.keys():
+					if sHash not in self.waitAckPackets.keys():
 						# if the packet has not been previously transmitted, create new entry
 						# and add to the self.waitAckPackets
 						timer = threading.Timer(self.ack_TIMEOUT, self.pushTowaitMsgQ, args=[packet, recipient])
-						self.waitAckPackets[packet["hash"]] = {"packet":packet, "RTA": self.maxResend, "LST": timeNow, "timer": timer}
+						self.waitAckPackets[sHash] = {"packet":packet, "RTA": self.maxResend, "LST": timeNow, "timer": timer}
 						timer.start()
+
 						 #transmission
 						self.s_id.sendto(packet_json.encode('ASCII'), (dst_ipaddr, dst_port))
-						self.logger.debug("Send: %s %s to %s at attempt 1", packetType(packet["TYPE"]), packet["hash"], recipient)
+						self.logger.debug("Send: %s %s to %s at attempt 1", packetType(sType), sHash, recipient)
 					else:
-						if self.waitAckPackets[packet["hash"]]["RTA"] == 0:
+						if self.waitAckPackets[sHash]["RTA"] == 0:
 							# if the packet has been transmitted for self.maxResend + 1 times
 							# and still no ACK is received, the intended recipient is dead.
 							# 1. mark recipient as dead in self.peers 2. remove entry from dict
 							self.peersLock.acquire()
-							if self.peers[recipient]["RTT"] != sys.maxsize:
+							if self.peers[recipientKey]["RTT"] != sys.maxsize:
 								self.logger.info("Node %s exited the network", recipient)
-							self.peers[recipient]["RTT"] = sys.maxsize
-							self.peers[recipient]["RTTSUM"] = sys.maxsize
+							self.peers[recipientKey]["RTT"] = sys.maxsize
+							self.peers[recipientKey]["RTTSUM"] = sys.maxsize
 							self.peerscv.notify()
 							self.peersLock.release()
 
 							#remove entry from self.waitAckPackets
-							del self.waitAckPackets[packet["hash"]]
+							del self.waitAckPackets[sHash]
 						else:
 							# if the packet is eligible for retransmission: 1. update LST 2. decrement RTA 3. set new timer
 							timer = threading.Timer(self.ack_TIMEOUT, self.pushTowaitMsgQ, args=[packet, recipient])
-							self.waitAckPackets[packet["hash"]]["RTA"] = self.waitAckPackets[packet["hash"]]["RTA"] - 1
-							self.waitAckPackets[packet["hash"]]["LST"] = timeNow
-							self.waitAckPackets[packet["hash"]]["timer"] = timer
+							self.waitAckPackets[sHash]["RTA"] = self.waitAckPackets[sHash]["RTA"] - 1
+							self.waitAckPackets[sHash]["LST"] = timeNow
+							self.waitAckPackets[sHash]["timer"] = timer
 							timer.start()
 
 							#transmission
 							self.s_id.sendto(packet_json.encode('ASCII'), (dst_ipaddr, dst_port))
-							self.logger.debug("Send: %s %s to %s at attempt %d", packetType(packet["TYPE"]), packet["hash"], recipient, self.maxResend - self.waitAckPackets[packet["hash"]]["RTA"] + 1)		
+							self.logger.debug("Send: %s %s to %s at attempt %d", packetType(sType), sHash, recipient, self.maxResend - self.waitAckPackets[sHash]["RTA"] + 1)		
 			self.waitAckLock.release()
 			self.waitMsgLock.release()
 
 	'''Broadcast messge to all known active node in the network'''
 	def broadcast(self, message):
-		for peer in self.peers:
-			self.sendTo(packetType.DATA, message, peer)
+		for peer in self.peers.keys():
+			self.sendTo(packetType.DATA, message, self.peers[peer]["name"])
+
+
+	'''ThreadHandler to interact with user'''
+	def console_interaction(self):
+
+		if not self.isCountingDown:
+
+			user_input = input("Starnode Command: ")
+			commands = user_input.split()
+			if len(commands) > 0: 
+				if "disconnect" in commands[0].lower():
+					self.logger.critical("Node Exiting...")
+					return self.__exit__()
+				else:
+					if "send" in commands[0].lower():
+						self.sendTo(packetType.BDATA, " ".join(commands[1:]), self.hub)
+					elif "show-status" in commands[0].lower():
+						status = "Node %s with RTTSUM: %f\
+							\n		# of active peer(s) in the network: %d \
+							\n		peers: %s \
+							\n 		Hub: {%s}" % \
+							(self.name, self.peers[self.nameKey]["RTTSUM"], \
+							 self.activeCount, self.activepeers, \
+							  self.hub)
+						print(status)
+
+					elif "show-log" in commands[0].lower():
+						f = open(self.logfile, 'r')
+						for line in f:
+							print(line)
+						f.close()
+					else:
+						self.logger.info("Invalid argument")			
+			
+			return self.console_interaction()
 
 
 	'''socket setup returns the socket handler'''		
 	def socketSetup(self):
 		self.s_id = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-		if (self.s_id.bind((self.hostname, self.port)) == -1):
+		if (self.s_id.bind((self.ip, self.port)) == -1):
 			self.logger.critical("socket setup failed.")
 			sys.exit(1)
 		else:
@@ -326,14 +382,12 @@ class StarNode:
 		'''
 		Instantiate a logger 
 		'''
-		# print('Text 1\nText 2\nText 3')
-		CURSOR_UP_ONE = '\x1b[1A'
-		ERASE_LINE = '\x1b[2K'
 		self.logger = logging.getLogger(__name__)
 
+		self.logfile = self.name + time.strftime("%Y-%m-%d%H:%M:%S", time.gmtime()) + '.log'
 		logging.basicConfig(format='%(asctime)s %(levelname)-2s %(message)s', \
 			datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG
-			, filename='logging.log', filemode='w')
+			, filename=self.logfile, filemode='w')
 
 		console_handler = logging.StreamHandler()
 
@@ -344,7 +398,7 @@ class StarNode:
 		
 
 		'''heartbeat interval'''
-		self.hbInterval = 5
+		self.hbInterval = 7
 		self.probingMaxAttempts = 5
 		self.activeCount = 0 
 		self.activepeers = []
@@ -353,7 +407,6 @@ class StarNode:
 		# isCountingDown is flagged on when either countingDown or probingPOC 
 		# function is triggered
 		self.isCountingDown = False
-
 
 	'''
 	When no peer nodes is active in the network, this node will start probing POC
@@ -368,7 +421,7 @@ class StarNode:
 
 		if self.portPOC != None:
 			self.logger.warning("Attempt to contact POC with %d more tries",remainingAttempts)
-			self.sendTo(packetType.KNOCKKNOCK, None, self.hostPOC)
+			self.sendTo(packetType.KNOCKKNOCK, None, self.namePOC)
 		else:
 			self.logger.warning("Exiting in %d seconds if no peers emerge",
 			 (self.maxResend + 2) * self.ack_TIMEOUT * remainingAttempts)
@@ -376,8 +429,8 @@ class StarNode:
 		anyActivePeer = False
 		self.peersLock.acquire()
 		self.peerscv.wait(timeout= (self.maxResend + 2) * self.ack_TIMEOUT)
-		for key in self.peers:
-			if key != self.hostname and self.peers[key]["RTT"] != sys.maxsize:
+		for peer in self.peers.keys():
+			if peer != self.nameKey and self.peers[peer]["RTT"] != sys.maxsize:
 				anyActivePeer = True
 				break
 		self.peersLock.release()
@@ -408,23 +461,23 @@ class StarNode:
 			self.activeCount = 0
 			self.activepeers = []
 			self.peersLock.acquire()
-			self.peers[self.hostname]["RTTSUM"] = 0
-			for key in self.peers:
-				if key != self.hostname and self.peers[key]["RTT"] != sys.maxsize:
+			self.peers[self.nameKey]["RTTSUM"] = 0
+			for peer in self.peers.keys():
+				if peer != self.nameKey and self.peers[peer]["RTT"] != sys.maxsize:
 					self.activeCount = self.activeCount + 1
-					self.activepeers.append(key)
-					self.peers[self.hostname]["RTTSUM"] += self.peers[key]["RTT"]
+					self.activepeers.append(self.peers[peer]["name"])
+					self.peers[self.nameKey]["RTTSUM"] += self.peers[peer]["RTT"]
 
-			# if no active peer, revert self.hostname's RTTSUM to infinity
-			self.peers[self.hostname]["RTTSUM"] = sys.maxsize if self.activeCount == 0 else self.peers[self.hostname]["RTTSUM"]
+			# if no active peer, revert self.name's RTTSUM to infinity
+			self.peers[self.nameKey]["RTTSUM"] = sys.maxsize if self.activeCount == 0 else self.peers[self.nameKey]["RTTSUM"]
 			
 			self.peerscv.notify()
 			self.peersLock.release()
 
 			#periodic handshake with peers
-			for peer in self.peers:
-				if peer != self.hostname:
-					self.sendTo(packetType.RTTSUM, self.peers[self.hostname]["RTTSUM"], peer)
+			for peer in self.peers.keys():
+				if peer != self.nameKey:
+					self.sendTo(packetType.RTTSUM, self.peers[self.nameKey]["RTTSUM"], self.peers[peer]["name"])
 
 			#timer will create a new thread to call heartbeat function for a given time interval
 			#sleep to account for delay, lost packet durig RTT exchange before hub re-selection
@@ -441,24 +494,24 @@ class StarNode:
 
 		if not self.isCountingDown:			
 			## Reselect the hub of the network
-			for key in self.peers:
-				if self.peers[key]["RTTSUM"] < self.peers[self.hub]["RTTSUM"]:
-					self.hub = key
+			minimumRTT = sys.maxsize
+			for peer in self.peers.keys():
+				if self.peers[peer]["RTTSUM"] < minimumRTT:
+					minimumRTT = self.peers[peer]["RTTSUM"]
+					self.hub = self.peers[peer]["name"]
 
-			self.logger.debug("Heartbeat from %s with RTTSUM: %f\
+			self.logger.info("Heartbeat from %s:\
 			\n				# of active peer(s) in the network: %d \
 			\n				peers: %s \
-			\n 				Hub: {%s} with RTTSUM: %f ", \
-			self.hostname, self.peers[self.hostname]["RTTSUM"], \
-			 self.activeCount, self.activepeers, \
-			  self.hub, self.peers[self.hub]["RTTSUM"])
+			\n 				Hub: {%s}", \
+			self.name, self.activeCount, self.activepeers, self.hub)
 
 			if self.activeCount == 0:
 				self.countingDown(self.probingMaxAttempts)
 
 
 	def __exit__(self):
-		self.sendTo(packetType.TERMINATE, None, self.hostname)
+		self.sendTo(packetType.TERMINATE, None, self.name)
 		self.listenerThread.join()
 		self.senderThread.join()
 		#print(threading.enumerate())
@@ -471,4 +524,3 @@ class StarNode:
 
 		for packet in self.waitAckPackets:
 			self.waitAckPackets[packet]["timer"].cancel()
-		
