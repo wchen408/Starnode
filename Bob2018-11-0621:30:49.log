@@ -1,8 +1,0 @@
-2018-11-06 16:30:49 DEBUG socket created successfully at port 1222
-2018-11-06 16:30:49 DEBUG Listener worker started.
-2018-11-06 16:30:49 DEBUG Sender worker started.
-2018-11-06 16:30:49 WARNING Attempt to contact POC with 5 more tries
-2018-11-06 16:30:49 DEBUG Send: packetType.KNOCKKNOCK 826847589036066825 to POC at attempt 1
-2018-11-06 16:30:49 DEBUG Received packetType.ACK 827822855849904137 with payload=[826847589036066825] from Alex
-2018-11-06 16:30:49 INFO Node Alex joined the network
-2018-11-06 16:30:49 DEBUG Received packetType.KNOCKKNOCK 828795923640485897 with payload=[None] from Alex

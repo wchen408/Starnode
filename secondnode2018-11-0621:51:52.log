@@ -1,8 +1,0 @@
-2018-11-06 16:51:52 DEBUG socket created successfully at port 1222
-2018-11-06 16:51:52 DEBUG Listener worker started.
-2018-11-06 16:51:52 DEBUG Sender worker started.
-2018-11-06 16:51:52 WARNING Attempt to contact POC with 5 more tries
-2018-11-06 16:51:52 DEBUG recipient = POC
-2018-11-06 16:51:52 DEBUG Send: packetType.KNOCKKNOCK 1319956563861048568 to POC at attempt 1
-2018-11-06 16:51:52 DEBUG Received packetType.KNOCKKNOCK 1322306220209605880 with payload=[None] from firstnode
-2018-11-06 16:51:52 DEBUG recipient = firstnode

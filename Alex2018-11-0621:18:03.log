@@ -1,8 +1,0 @@
-2018-11-06 16:18:03 DEBUG socket created successfully at port 1111
-2018-11-06 16:18:03 DEBUG Listener worker started.
-2018-11-06 16:18:03 DEBUG Sender worker started.
-2018-11-06 16:18:03 WARNING Exiting in 20 seconds if no peers emerge
-2018-11-06 16:18:03 INFO Node Bob joined the network
-2018-11-06 16:18:03 DEBUG Send: packetType.ACK 875595536565142795 to Bob
-2018-11-06 16:18:03 DEBUG Received packetType.KNOCKKNOCK 864709821694346506 with payload=[None] from Bob
-2018-11-06 16:18:03 DEBUG Send: packetType.KNOCKKNOCK 877442716099806475 to Bob at attempt 1
