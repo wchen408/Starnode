@@ -42,8 +42,9 @@ class StarNode:
 
 
 		#POC variable instantiation
+		self.hostPOC = hostPOC
+		self.portPOC = portPOC
 		self.ipPOC = None
-		self.portPOC = None
 		self.namePOC = None
 		self.nameKeyPOC = None
 
@@ -54,7 +55,6 @@ class StarNode:
 		self.peers[self.nameKey] = {"name": self.name, "host": self.ip, "port": self.port, "RTT": 0, "RTTSUM": sys.maxsize}
 		if (hostPOC != None and portPOC != None):
 			self.ipPOC = socket.gethostbyname(hostPOC)
-			self.portPOC = portPOC
 			self.namePOC = "POC"
 			self.nameKeyPOC = self.ipPOC + str(self.portPOC)
 			self.peers[self.ipPOC + str(self.portPOC)] = {"name": "POC", "host": self.ipPOC, "port": portPOC, "RTT": sys.maxsize, "RTTSUM": sys.maxsize}
@@ -70,8 +70,8 @@ class StarNode:
 		self.senderThread.start()
 		
 
-		threading.Thread(target=self.countingDown, args=(self.probingMaxAttempts,)).start()
-		#self.countingDown(self.probingMaxAttempts)
+		#threading.Thread(target=self.countingDown, args=(self.probingMaxAttempts,)).start()
+		self.countingDown(self.probingMaxAttempts)
 
 	'''
 	Threadworker that listens to the socket to for any incoming packet and perform actions correspondingly. 
@@ -111,7 +111,6 @@ class StarNode:
 
 			if rType == packetType.TERMINATE:
 				self.peers[srcKey]["RTT"] = sys.maxsize
-				self.peerscv.notify()
 				self.peersLock.release()
 				break
 			else:
@@ -121,33 +120,29 @@ class StarNode:
 				Otherwise, the incoming packet is an ACK, update the peer vector to account for the most recent RTT to this peer. 
 				'''
 
-				##TODO add try&except statement to handle duplicate ACK packets
 				if (rType == packetType.ACK):
 					self.logger.debug("Received %s %d with payload=[%s] from %s", packetType(rType), rHash, rPayload, senderName)
 					self.waitAckLock.acquire()
 
+					# In the case of receiving duplicate ACK packets
 					try:
 						# cancel the timer object
 						self.waitAckPackets[rPayload]["timer"].cancel()
 						# update RTT of the peer
+						oldRTT = self.peers[srcKey]["RTT"]
+						timeNow = time.time()
+						self.peers[srcKey]["RTT"] = timeNow - self.waitAckPackets[rPayload]["LST"]
+
+						# pop off entry from the self.waitAckPackets
+						del self.waitAckPackets[rPayload]
+
+						# notify the network if the node if previously dead
+						if oldRTT == sys.maxsize:
+							self.logger.info("Node %s joined the network", senderName)
+							self.peerscv.notify()
 					except:
-						self.logger.debug("Attmpted to cancel packet %d failed", rHash)
+						self.logger.warning("Attmpted to cancel packet %d failed", rPayload)
 
-					# cancel the timer object
-					self.waitAckPackets[rPayload]["timer"].cancel()
-
-					# update RTT of the peer
-					oldRTT = self.peers[srcKey]["RTT"]
-					timeNow = time.time()
-					self.peers[srcKey]["RTT"] = timeNow - self.waitAckPackets[rPayload]["LST"]
-
-					# pop off entry from the self.waitAckPackets
-					del self.waitAckPackets[rPayload]
-
-					# notify the network if the node if previously dead
-					if oldRTT == sys.maxsize:
-						self.logger.info("Node %s joined the network", senderName)
-						self.peerscv.notify()
 					self.waitAckLock.release()
 				else:
 
@@ -172,7 +167,7 @@ class StarNode:
 						newnode = {}
 						newnode[srcKey] = {"name": senderName, "port": senderPort, "host": senderHost}
 						for each in self.peers.keys():
-							if self.peers[each]["RTT"] != sys.maxsize:
+							if self.peers[each]["RTT"] != sys.maxsize and each != self.nameKey:
 								self.sendTo(packetType.KNOCKRPLY, newnode, self.peers[each]["name"])
 								exisiting_nodesnports[each] = {"name": self.peers[each]["name"], "port": self.peers[each]["port"], "host": self.peers[each]["host"]}
 						self.sendTo(packetType.KNOCKRPLY, exisiting_nodesnports, senderName)
@@ -181,6 +176,7 @@ class StarNode:
 						for newNeighbour in rPayload.keys():
 							if newNeighbour not in self.peers.keys():
 								self.logger.info("Node %s joined the network.", rPayload[newNeighbour]["name"])
+								self.peerscv.notify()
 								self.peers[newNeighbour] = {"name": rPayload[newNeighbour]["name"], "host": rPayload[newNeighbour]["host"], "port": rPayload[newNeighbour]["port"], "RTT": sys.maxsize-1, "RTTSUM": sys.maxsize}
 					elif rType == packetType.RTTSUM:
 						self.logger.debug("Received %s %d with payload=[%s] from %s", packetType(rType), rHash, rPayload, senderName)
@@ -272,7 +268,6 @@ class StarNode:
 								self.logger.info("Node %s exited the network", recipient)
 							self.peers[recipientKey]["RTT"] = sys.maxsize
 							self.peers[recipientKey]["RTTSUM"] = sys.maxsize
-							self.peerscv.notify()
 							self.peersLock.release()
 
 							#remove entry from self.waitAckPackets
@@ -384,7 +379,7 @@ class StarNode:
 		'''
 		self.logger = logging.getLogger(__name__)
 
-		self.logfile = self.name + time.strftime("%Y-%m-%d%H:%M:%S", time.gmtime()) + '.log'
+		self.logfile = self.name + '_' + time.strftime("%Y-%m-%d_%H%M%S", time.localtime()) + '.log'
 		logging.basicConfig(format='%(asctime)s %(levelname)-2s %(message)s', \
 			datefmt='%Y-%m-%d %H:%M:%S', level=logging.DEBUG
 			, filename=self.logfile, filemode='w')
@@ -393,12 +388,12 @@ class StarNode:
 
 		console_handler.setFormatter(logging.Formatter('\x1b[1K\x1b[99D%(asctime)s %(levelname)-2s %(message)s', \
 			datefmt='%Y-%m-%d %H:%M:%S'))
-		console_handler.setLevel(logging.INFO)
+		console_handler.setLevel(logging.DEBUG)
 		self.logger.addHandler(console_handler)
 		
 
 		'''heartbeat interval'''
-		self.hbInterval = 7
+		self.hbInterval = 10
 		self.probingMaxAttempts = 5
 		self.activeCount = 0 
 		self.activepeers = []
@@ -415,11 +410,18 @@ class StarNode:
 	def countingDown(self, remainingAttempts):
 
 		self.isCountingDown = True
+
+		# if dormant heartbeat timer exist, cancel the timer to prevent duplication
+		try:
+			self.heartbeatTimer.cancel()
+		except:
+			None
+
 		if remainingAttempts == 0:
 			self.logger.critical("Could not established connection with other nodes. Exiting...")
 			return self.__exit__()
 
-		if self.portPOC != None:
+		if self.hostPOC != None:
 			self.logger.warning("Attempt to contact POC with %d more tries",remainingAttempts)
 			self.sendTo(packetType.KNOCKKNOCK, None, self.namePOC)
 		else:
@@ -437,8 +439,8 @@ class StarNode:
 
 		if anyActivePeer:
 			self.isCountingDown = False
-			threading.Thread(target=self.console_interaction).start()
-			threading.Thread(target=self.nextHeartbeat).start()
+			#threading.Thread(target=self.console_interaction).start()
+			return self.nextHeartbeat()
 		else:
 			return self.countingDown(remainingAttempts-1)
 
@@ -455,34 +457,39 @@ class StarNode:
 
 	'''Recalculate RTTSUM and heartbeat to the peers in the network'''
 	def heartbeat(self):
-		if not self.isCountingDown:
+		# if not self.isCountingDown:
 
-			#recalculate RTT
-			self.activeCount = 0
-			self.activepeers = []
-			self.peersLock.acquire()
-			self.peers[self.nameKey]["RTTSUM"] = 0
-			for peer in self.peers.keys():
-				if peer != self.nameKey and self.peers[peer]["RTT"] != sys.maxsize:
-					self.activeCount = self.activeCount + 1
-					self.activepeers.append(self.peers[peer]["name"])
-					self.peers[self.nameKey]["RTTSUM"] += self.peers[peer]["RTT"]
+		#recalculate RTT
+		self.activeCount = 0
+		self.activepeers = []
+		self.peersLock.acquire()
+		self.peers[self.nameKey]["RTTSUM"] = 0
+		for peer in self.peers.keys():
+			if peer != self.nameKey and self.peers[peer]["RTT"] != sys.maxsize:
+				self.activeCount = self.activeCount + 1
+				self.activepeers.append(self.peers[peer]["name"])
+				self.peers[self.nameKey]["RTTSUM"] += self.peers[peer]["RTT"]
 
-			# if no active peer, revert self.name's RTTSUM to infinity
-			self.peers[self.nameKey]["RTTSUM"] = sys.maxsize if self.activeCount == 0 else self.peers[self.nameKey]["RTTSUM"]
-			
-			self.peerscv.notify()
-			self.peersLock.release()
+		# if no active peer, revert self.name's RTTSUM to infinity
+		self.peers[self.nameKey]["RTTSUM"] = sys.maxsize if self.activeCount == 0 else self.peers[self.nameKey]["RTTSUM"]
+		
+		self.peersLock.release()
 
-			#periodic handshake with peers
-			for peer in self.peers.keys():
-				if peer != self.nameKey:
-					self.sendTo(packetType.RTTSUM, self.peers[self.nameKey]["RTTSUM"], self.peers[peer]["name"])
+		#periodic handshake with peers
+		for peer in self.peers.keys():
+			if peer != self.nameKey:
+				self.sendTo(packetType.RTTSUM, self.peers[self.nameKey]["RTTSUM"], self.peers[peer]["name"])
 
+
+		if self.activeCount == 0:
+			self.countingDown(self.probingMaxAttempts)
+		else:
 			#timer will create a new thread to call heartbeat function for a given time interval
 			#sleep to account for delay, lost packet durig RTT exchange before hub re-selection
-			self.selectHubnCheckTimer = threading.Timer(self.hbInterval-1, self.selectHubnCheck)
-			self.selectHubnCheckTimer.start()
+			# self.selectHubnCheckTimer = threading.Timer(self.hbInterval-1, self.selectHubnCheck)
+			# self.selectHubnCheckTimer.start()
+			self.selectHubnCheckTimer = threading.Timer((self.maxResend + 1) * self.ack_TIMEOUT, self.selectHubnCheck)
+			self.selectHubnCheckTimer.start()			
 
 			#sleep because of periodic heartbeat
 			self.heartbeatTimer = threading.Timer(self.hbInterval, self.heartbeat)
@@ -492,22 +499,20 @@ class StarNode:
 	'''Reselect hub'''
 	def selectHubnCheck(self):
 
-		if not self.isCountingDown:			
-			## Reselect the hub of the network
-			minimumRTT = sys.maxsize
-			for peer in self.peers.keys():
-				if self.peers[peer]["RTTSUM"] < minimumRTT:
-					minimumRTT = self.peers[peer]["RTTSUM"]
-					self.hub = self.peers[peer]["name"]
+		# if not self.isCountingDown:
 
-			self.logger.info("Heartbeat from %s:\
-			\n				# of active peer(s) in the network: %d \
-			\n				peers: %s \
-			\n 				Hub: {%s}", \
-			self.name, self.activeCount, self.activepeers, self.hub)
+		## Reselect the hub of the network
+		minimumRTT = sys.maxsize
+		for peer in self.peers.keys():
+			if self.peers[peer]["RTTSUM"] < minimumRTT:
+				minimumRTT = self.peers[peer]["RTTSUM"]
+				self.hub = self.peers[peer]["name"]
 
-			if self.activeCount == 0:
-				self.countingDown(self.probingMaxAttempts)
+		self.logger.info("Heartbeat from %s:\
+		\n				# of active peer(s) in the network: %d \
+		\n				peers: %s \
+		\n 				Hub: {%s}", \
+		self.name, self.activeCount, self.activepeers, self.hub)
 
 
 	def __exit__(self):
