@@ -549,8 +549,6 @@ if __name__ == "__main__":
 
 	args = parser.parse_args()
 
-	print(args)
-
 	StarNode(args.node_name, args.local_port, args.PoC_address,\
 	 args.PoC_port, args.MaxNode)
 

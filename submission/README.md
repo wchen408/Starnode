@@ -14,7 +14,7 @@ Grace Harper, ghaper31@gatech.edu
 
 ### File Descriptions
 
-**StarNode.py** : Definition of class StarNode
+**star_node.py** : Definition of class StarNode
 
 
 
@@ -27,13 +27,13 @@ Optional arguments: *PoC_address*, *PoC_port*
 Example without PoC:
 
 ```bash
-python3 StarNode.py node2 1222 10
+python3 star_node.py node2 1222 10
 ```
 
 with PoC:
 
 ```bash
-python3 StarNode.py node1 1111 -pa=localhost -pc=1222 10
+python3 star_node.py node1 1111 -pa=localhost -pc=1222 10
 ```
 
 
