@@ -8,7 +8,7 @@ Grace Harper, ghaper31@gatech.edu
 
 ### Design Logic
 
-![StarNode Structure](/Users/Tony/Downloads/StarNode Structure.png)
+![thread_structure](thread_structure.png)
 
 
 
