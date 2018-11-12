@@ -1,0 +1,4 @@
+2018-11-12 13:07:15 DEBUG socket created successfully at port 1222
+2018-11-12 13:07:15 DEBUG Listener worker started.
+2018-11-12 13:07:15 DEBUG Sender worker started.
+2018-11-12 13:07:15 WARNING Exiting in 20 seconds if no peers emerge

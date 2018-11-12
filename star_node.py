@@ -319,12 +319,11 @@ class StarNode:
 							 self.activeCount, self.activepeers, \
 							  self.hub)
 						print(status)
-
-					# elif "show-log" in commands[0].lower() or "log" in commands[0].lower():
-					# 	f = open(self.logfile, 'r')
-					# 	for line in f:
-					# 		print(line, end='')
-					# 	f.close()
+					elif "show-log" in commands[0].lower() or "log" in commands[0].lower():
+						f = open(self.logfile, 'r')
+						for line in f:
+							print(line, end='')
+						f.close()
 					else:
 						self.logger.info("Invalid argument")			
 			
