@@ -35,11 +35,11 @@ class StarNode:
 		self.name = name
 
 		#obtain IP of this node
-		# if sys.platform == 'darwin':
-		# 	self.ip = socket.gethostbyname(socket.gethostname() + '.local')
-		# else:
-		# 	self.ip = socket.gethostbyname(socket.gethostname())
-		self.ip = '127.0.0.1'
+		if sys.platform == 'darwin':
+			self.ip = socket.gethostbyname(socket.gethostname() + '.local')
+		else:
+			self.ip = socket.gethostbyname(socket.gethostname())
+		# self.ip = '127.0.0.1'
 		self.port = port
 		self.hub = self.name
 		self.nameKey = self.ip + str(self.port)
