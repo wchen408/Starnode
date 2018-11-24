@@ -15,16 +15,17 @@ import logging
 import time
 import fcntl
 import struct
-from enum import IntEnum
-
+import base64
+from enum import IntEnum 
 class packetType(IntEnum):
 	ACK = 0
-	DATA = 1
+	DATA = 1 
 	BDATA = 2
 	KNOCKKNOCK = 3
 	KNOCKRPLY = 4 
 	RTTSUM = 5
 	TERMINATE = 6
+
 
 
 class StarNode:
@@ -42,7 +43,7 @@ class StarNode:
 		# self.ip = '127.0.0.1'
 		self.port = port
 		self.hub = self.name
-		self.nameKey = self.ip + str(self.port)
+		self.nameKey = self.ip + str(self.port) 
 
 
 		#POC variable instantiation
@@ -72,11 +73,32 @@ class StarNode:
 		self.listenerThread.start()
 		self.senderThread = threading.Thread(target=self.sender, name="senderThread")
 		self.senderThread.start()
-		
 
 		#threading.Thread(target=self.countingDown, args=(self.probingMaxAttempts,)).start()
 		self.countingDown(self.probingMaxAttempts)
 
+
+
+ 
+	def serializeImage(self,imageName):
+		f = open (imageName, "rb" )
+		data = base64.encodebytes(f.read())
+		f.close()
+		data = data.decode("ascii")
+		jpacket = json.dumps(data)
+
+		return jpacket
+ 
+	def saveImage(self, imageName, imagePacket):
+		unpacked = json.loads(imagePacket)
+		#print("unpacked: ", unpacked)
+		unpacked = unpacked.encode("ascii")
+		unpacked = base64.decodebytes(unpacked)
+		nf = open(imageName, "wb")
+		nf.write(unpacked)
+		nf.close()
+		return 
+		
 	'''
 	Threadworker that listens to the socket to for any incoming packet and perform actions correspondingly. 
 	{ACK: Delete Entry from the Resend Stack} 
@@ -100,7 +122,8 @@ class StarNode:
 			senderPort = packet["srcPort"] 
 			rType = packet["TYPE"] 
 			rHash = packet["hash"] 
-			rPayload = packet["payload"] 
+			rPayload = packet["payload"]
+			rImageName = packet["imageName"] 
 			#key used to index into self.peers
 			srcKey = senderHost + str(senderPort)
 
@@ -161,9 +184,16 @@ class StarNode:
 					self.sendTo(packetType.ACK, rHash, senderName)
 					
 					if rType == packetType.DATA:
-						self.logger.info("Received [%s] from %s.",rPayload, senderName)
+						#if image is a name, not an empty field
+						if(rImageName is not None): 
+							self.saveImage(rImageName, rPayload)
+							self.logger.info("Received and downloaded[%s] from %s.",rImageName, senderName)
+						else: 
+							#IF PACKET IS JUST STRING: 
+							self.logger.info("Received [%s] from %s.",rPayload, senderName)
+
 					elif rType == packetType.BDATA:
-						self.broadcast(rPayload)
+						self.broadcast(rPayload, rImageName)
 					elif rType == packetType.KNOCKKNOCK:
 						self.logger.debug("Received %s %d with payload=[%s] from %s", packetType(rType), rHash, rPayload, senderName)
 						#Introduce the network to the node knocked on the door
@@ -191,10 +221,12 @@ class StarNode:
 		self.logger.debug("Listener exiting")
 
 	'''Creates packet and pushes into waitMsgQ, notify senderThread.'''
-	def sendTo(self, packtype, payload, recipient):
+	def sendTo(self, packtype, payload, recipient, imageName=None):
 		#populate an packet
+		##Determing if photo
 		packet = {"TYPE": packtype, "srcName": self.name, "srcHost": self.ip, \
-		"srcPort": self.port, "payload": payload, "hash":hash(time.time())}
+		"srcPort": self.port, "payload": payload, "hash":hash(time.time()), \
+		"imageName":imageName} 
 
 		#acquire mutex lock and push to the queue
 		self.waitMsgLock.acquire()
@@ -242,6 +274,7 @@ class StarNode:
 				sHash = packet["hash"]
 				sName = packet["srcName"]
 				sType = packet["TYPE"]
+				imageName = packet["imageName"]
 
 				timeNow = time.time()
 				if sType == packetType.ACK or sType == packetType.TERMINATE:
@@ -256,7 +289,7 @@ class StarNode:
 						# if the packet has not been previously transmitted, create new entry
 						# and add to the self.waitAckPackets
 						timer = threading.Timer(self.ack_TIMEOUT, self.pushTowaitMsgQ, args=[packet, recipient])
-						self.waitAckPackets[sHash] = {"packet":packet, "RTA": self.maxResend, "LST": timeNow, "timer": timer}
+						self.waitAckPackets[sHash] = {"packet":packet, "RTA": self.maxResend, "LST": timeNow, "timer": timer, "imageName": imageName}
 						timer.start()
 
 						 #transmission
@@ -291,9 +324,10 @@ class StarNode:
 			self.waitMsgLock.release()
 
 	'''Broadcast messge to all known active node in the network'''
-	def broadcast(self, message):
+	def broadcast(self, message, imageName):
 		for peer in self.peers.keys():
-			self.sendTo(packetType.DATA, message, self.peers[peer]["name"])
+			print("image name: ", imageName)
+			self.sendTo(packetType.DATA, message, self.peers[peer]["name"], imageName)
 
 
 	'''ThreadHandler to interact with user'''
@@ -309,7 +343,15 @@ class StarNode:
 					return self.__exit__()
 				else:
 					if "send" in commands[0].lower():
-						self.sendTo(packetType.BDATA, " ".join(commands[1:]), self.hub)
+						if "image" in commands[1].lower():
+							#SEND image imageName.jpeg
+							# 0      1       2       
+							imageName = "new_" + commands[2]
+							serializedToSendImage = self.serializeImage(commands[2])
+							self.sendTo(packetType.BDATA, serializedToSendImage, self.hub, imageName)
+						else:
+							self.sendTo(packetType.BDATA, " ".join(commands[1:]), self.hub)
+
 					elif "show-status" in commands[0].lower() or "status" in commands[0].lower():
 						status = "Node %s with RTTSUM: %f\
 							\n		# of active peer(s) in the network: %d \
@@ -519,7 +561,7 @@ class StarNode:
 
 
 	def __exit__(self):
-		self.sendTo(packetType.TERMINATE, None, self.name)
+		self.sendTo(packetType.TERMINATE, None, self.name) 
 		self.listenerThread.join()
 		self.senderThread.join()
 		try:
@@ -530,6 +572,8 @@ class StarNode:
 		for packet in self.waitAckPackets:
 			self.waitAckPackets[packet]["timer"].cancel()
 
+
+		
 
 if __name__ == "__main__":
 
@@ -551,3 +595,24 @@ if __name__ == "__main__":
 	StarNode(args.node_name, args.local_port, args.PoC_address,\
 	 args.PoC_port, args.MaxNode)
 
+'''
+		#populate an packet
+		packet = {"TYPE": packtype, "srcName": self.name, "srcHost": self.ip, \
+		"srcPort": self.port, "payload": payload, "hash":hash(time.time())}
+
+#1 differentiate send photo from send msg
+#2 if "send photo" --> send photo 
+	#add another [] to {}
+	#fix all the broken functions
+	#if (photo) ---> download, not print;;; if(BDATA) ---->broadcast
+	#photo is saved as file onto the laptop
+	#sendTo function (done--)
+	#console interaction log (done--)
+	#Broadcast function to take in image (done)
+	#serializeImage 
+	#saveImage
+	#ADD space-ability in the names of jpeg files
+
+
+
+'''
