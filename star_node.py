@@ -301,7 +301,11 @@ class StarNode:
 						timer.start()
 
 						 #transmission
-						self.s_id.sendto(packet_json.encode('ASCII'), (dst_ipaddr, dst_port))
+						try: 
+							self.s_id.sendto(packet_json.encode('ASCII'), (dst_ipaddr, dst_port))
+						except:
+							self.logger.warning("Illegal Content %s to send through socket, skipping...", packet_json.encode('ASCII'))
+							continue
 						self.logger.debug("Send: %s %s to %s at attempt 1", packetType(sType), sHash, recipient)
 					else:
 						if self.waitAckPackets[sHash]["RTA"] == 0:
@@ -326,7 +330,11 @@ class StarNode:
 							timer.start()
 
 							#transmission
-							self.s_id.sendto(packet_json.encode('ASCII'), (dst_ipaddr, dst_port))
+							try: 
+								self.s_id.sendto(packet_json.encode('ASCII'), (dst_ipaddr, dst_port))
+							except:
+								self.logger.warning("Illegal Content %s to send through socket, skipping...", packet_json.encode('ASCII'))
+								continue
 							self.logger.debug("Send: %s %s to %s at attempt %d", packetType(sType), sHash, recipient, self.maxResend - self.waitAckPackets[sHash]["RTA"] + 1)		
 			self.waitAckLock.release()
 			self.waitMsgLock.release()
