@@ -280,6 +280,11 @@ class StarNode:
 				dst_ipaddr = None
 				dst_port = None
 				recipientKey = None
+
+				# handle the case when recipient was still "POC", but POC name has changed
+				if recipient == "POC":
+					recipient = self.namePOC
+					
 				for each in self.peers.keys():
 					if self.peers[each]["name"] == recipient:
 						dst_ipaddr = self.peers[each]["host"]
