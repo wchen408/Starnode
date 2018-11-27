@@ -127,6 +127,15 @@ class StarNode:
 			#key used to index into self.peers
 			srcKey = senderHost + str(senderPort)
 
+			# Ignore duplicate packets
+			if rHash in self.allPacketHashes:
+				continue
+			else:
+				self.pcktHashLock.acquire()
+				self.allPacketHashes.add(rHash)
+				threading.Timer(self.ack_TIMEOUT * (self.maxResend + 1), self.rmFromPckHashSet, args=rHash)
+				self.pcktHashLock.release()
+
 
 
 			self.peersLock.acquire()
@@ -240,6 +249,11 @@ class StarNode:
 		self.waitMsgQ.put((packet, recipient))
 		self.waitMsgcv.notify()
 		self.waitMsgLock.release()
+
+	def rmFromPckHashSet(self, hashToRemove):
+		self.pcktHashLock.acquire()
+		self.allPacketHashes.discard(hashToRemove)
+		self.pcktHashLock.release()
 
 	'''Threadworker that sends out packet. For every type except for ACK, push the packet into the waitAckPackets '''
 	def sender(self):
@@ -434,6 +448,14 @@ class StarNode:
 		self.waitMsgQ = queue.Queue()
 		self.waitMsgLock = threading.Lock()
 		self.waitMsgcv = threading.Condition(self.waitMsgLock)
+
+		'''
+		Shared DS.
+		A Set of received packets hashes.
+		Duplicate packets with hashes already contained in the set will be ignored
+		'''
+		self.allPacketHashes = set()
+		self.pcktHashLock = threading.Lock()
 
 		'''
 		Instantiate a logger 
