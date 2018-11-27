@@ -258,6 +258,10 @@ class StarNode:
 			while not self.waitMsgQ.empty():
 				packet, recipient = self.waitMsgQ.get()
 
+				if (packet == None or recipient == None):
+					self.logger.warning("Attmpted to transmit empty packet:%s to %s failed.", packet, recipient)
+					continue
+
 				#retrieve recipient address
 				dst_ipaddr = None
 				dst_port = None
@@ -403,8 +407,8 @@ class StarNode:
 		LST:Last Sent Time, when an ACK is received, this field is used by listener to calculate RTT 
 		timer: a threading.timer object that calls SendTo() function when ack_TIMEOUT is up
 		'''
-		self.ack_TIMEOUT = 1
-		self.maxResend = 2
+		self.ack_TIMEOUT = 0.3
+		self.maxResend = 4
 		self.waitAckPackets = dict()
 		self.waitAckLock = threading.Lock()
 
@@ -546,7 +550,7 @@ class StarNode:
 
 		# if not self.isCountingDown:
 
-		## Reselect the hub of the network
+		# Reselect the hub of the network 
 		minimumRTT = sys.maxsize
 		for peer in self.peers.keys():
 			if self.peers[peer]["RTTSUM"] < minimumRTT:
