@@ -282,7 +282,11 @@ class StarNode:
 
 				timeNow = time.time()
 				if sType == packetType.ACK or sType == packetType.TERMINATE:
-					self.s_id.sendto(packet_json.encode('ASCII'), (dst_ipaddr, dst_port))
+					try:
+						self.s_id.sendto(packet_json.encode('ASCII'), (dst_ipaddr, dst_port))
+					except:
+						self.logger.warning("Illegal Content %s to send through socket, skipping...", packet_json.encode('ASCII'))
+						continue
 					self.logger.debug("Send: %s %s to %s", packetType(sType), sHash, recipient)
 					if sType == packetType.TERMINATE:
 						self.logger.debug("Sender exiting")
