@@ -326,7 +326,6 @@ class StarNode:
 	'''Broadcast messge to all known active node in the network'''
 	def broadcast(self, message, imageName):
 		for peer in self.peers.keys():
-			print("image name: ", imageName)
 			self.sendTo(packetType.DATA, message, self.peers[peer]["name"], imageName)
 
 
@@ -339,6 +338,7 @@ class StarNode:
 			commands = user_input.split()
 			if len(commands) > 0: 
 				if "disconnect" in commands[0].lower() or "exit" in commands[0].lower():
+					self.isCountingDown = True
 					self.logger.critical("Node Exiting...")
 					return self.__exit__()
 				else:
