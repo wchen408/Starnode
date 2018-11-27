@@ -133,7 +133,7 @@ class StarNode:
 			else:
 				self.pcktHashLock.acquire()
 				self.allPacketHashes.add(rHash)
-				threading.Timer(self.ack_TIMEOUT * (self.maxResend + 1), self.rmFromPckHashSet, args=rHash)
+				threading.Timer(self.ack_TIMEOUT * self.maxResend + self.hashStayTime , self.rmFromPckHashSet, args=rHash)
 				self.pcktHashLock.release()
 
 
@@ -454,6 +454,7 @@ class StarNode:
 		A Set of received packets hashes.
 		Duplicate packets with hashes already contained in the set will be ignored
 		'''
+		self.hashStayTime = 3
 		self.allPacketHashes = set()
 		self.pcktHashLock = threading.Lock()
 
