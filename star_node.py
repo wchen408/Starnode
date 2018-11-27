@@ -284,7 +284,7 @@ class StarNode:
 				# handle the case when recipient was still "POC", but POC name has changed
 				if recipient == "POC":
 					recipient = self.namePOC
-					
+
 				for each in self.peers.keys():
 					if self.peers[each]["name"] == recipient:
 						dst_ipaddr = self.peers[each]["host"]
@@ -381,9 +381,12 @@ class StarNode:
 						if "image" in commands[1].lower():
 							#SEND image imageName.jpeg
 							# 0      1       2       
-							imageName = "new_" + commands[2]
-							serializedToSendImage = self.serializeImage(commands[2])
-							self.sendTo(packetType.BDATA, serializedToSendImage, self.hub, imageName)
+							try:
+								imageName = "new_" + commands[2]
+								serializedToSendImage = self.serializeImage(commands[2])
+								self.sendTo(packetType.BDATA, serializedToSendImage, self.hub, imageName)
+							except:
+								self.logger.warning("Illegal Image file.")
 						else:
 							self.sendTo(packetType.BDATA, " ".join(commands[1:]), self.hub)
 
