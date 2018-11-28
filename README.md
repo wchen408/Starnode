@@ -2,7 +2,7 @@
 
 Weichao Chen, wchen408@gatech.edu
 
-Grace Harper, ghaper31@gatech.edu
+Grace Harper, gharper31@gatech.edu
 
 
 
