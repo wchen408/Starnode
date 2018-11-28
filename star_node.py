@@ -210,17 +210,17 @@ class StarNode:
 						newnode = {}
 						newnode[srcKey] = {"name": senderName, "port": senderPort, "host": senderHost}
 						for each in self.peers.keys():
-							if self.peers[each]["RTT"] != sys.maxsize and each != self.nameKey:
-								self.sendTo(packetType.KNOCKRPLY, newnode, self.peers[each]["name"])
-								exisiting_nodesnports[each] = {"name": self.peers[each]["name"], "port": self.peers[each]["port"], "host": self.peers[each]["host"]}
+							#if self.peers[each]["RTT"] != sys.maxsize and each != self.nameKey:
+							self.sendTo(packetType.KNOCKRPLY, newnode, self.peers[each]["name"])
+							exisiting_nodesnports[each] = {"name": self.peers[each]["name"], "port": self.peers[each]["port"], "host": self.peers[each]["host"]}
 						self.sendTo(packetType.KNOCKRPLY, exisiting_nodesnports, senderName)
 					elif rType == packetType.KNOCKRPLY:
 						self.logger.debug("Received %s %d with payload=[%s] from %s", packetType(rType), rHash, rPayload, senderName)
 						for newNeighbour in rPayload.keys():
 							if newNeighbour not in self.peers.keys():
 								self.logger.info("Node %s joined the network.", rPayload[newNeighbour]["name"])
-								self.peerscv.notify()
 								self.peers[newNeighbour] = {"name": rPayload[newNeighbour]["name"], "host": rPayload[newNeighbour]["host"], "port": rPayload[newNeighbour]["port"], "RTT": sys.maxsize-1, "RTTSUM": sys.maxsize}
+								self.peerscv.notify()
 					elif rType == packetType.RTTSUM:
 						self.logger.debug("Received %s %d with payload=[%s] from %s", packetType(rType), rHash, rPayload, senderName)
 						self.peers[srcKey]["RTTSUM"] = rPayload
